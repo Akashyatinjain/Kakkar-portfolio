@@ -1,5 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
+
+// Image asset imports for Vite compilation
+import drishtiImg from './assets/drishti.png';
+import careergpsImg from './assets/careergps_mockup.png';
+import cyberguardImg from './assets/cyberguard_mockup.png';
+import lockerImg from './assets/locker_mockup.png';
+import saregamaImg from './assets/saregama_video.png';
+import zoeticsImg from './assets/zoetics_catalog.png';
+import newsletterImg from './assets/alumni_newsletter.png';
+import heroImg from './assets/hero.png';
+import reactSvg from './assets/react.svg';
 import {
   Github,
   Linkedin,
@@ -259,7 +270,7 @@ function App() {
       icon: <Brain size={24} />,
       highlight: "Agentic AI workflow with Groq inference",
       github: "https://github.com/drishti-kakkar/CareerGPS-AI",
-      image: "/src/assets/careergps_mockup.png"
+      image: careergpsImg
     },
     {
       title: "CyberGuard AI",
@@ -269,7 +280,7 @@ function App() {
       icon: <Shield size={24} />,
       highlight: "Sub-2-second deepfake detection",
       github: "https://github.com/drishti-kakkar/CyberGuard-AI",
-      image: "/src/assets/cyberguard_mockup.png"
+      image: cyberguardImg
     },
 
     {
@@ -280,7 +291,7 @@ function App() {
       icon: <Lock size={24} />,
       highlight: "Hardware + Software integration",
       github: "https://github.com/drishti-kakkar/Smart-Locker-IoT",
-      image: "/src/assets/locker_mockup.png"
+      image: lockerImg
     },
     {
       title: "AI Chatbot (QR Locator)",
@@ -290,7 +301,7 @@ function App() {
       icon: <Cpu size={24} />,
       highlight: "Healthcare deployment with mentorship",
       github: "https://github.com/drishti-kakkar/AI-Chatbot-QR",
-      image: "/src/assets/hero.png"
+      image: heroImg
     },
     {
       title: "Netflix Data Platform",
@@ -300,7 +311,7 @@ function App() {
       icon: <BarChart2 size={24} />,
       highlight: "Production-quality data visualization",
       github: "https://github.com/drishti-kakkar/Netflix-Data-Platform",
-      image: "/src/assets/react.svg"
+      image: reactSvg
     }
   ];
 
@@ -392,21 +403,21 @@ function App() {
       type: "Film & Direction",
       desc: "Served as Assistant Director on a Saregama-label music video. Managed shoot logistics, scene breakdowns, talent direction, and multi-location scheduling.",
       tags: ["Direction", "Saregama", "Production"],
-      image: "/src/assets/saregama_video.png"
+      image: saregamaImg
     },
     {
       title: "Zoetics B2B Brand Catalog",
       type: "Graphic Design",
       desc: "Designed comprehensive product catalogs, digital creatives, and branded holiday assets for corporate B2B clients. 30+ branded deliverables.",
       tags: ["Figma", "Photoshop", "B2B Branding"],
-      image: "/src/assets/zoetics_catalog.png"
+      image: zoeticsImg
     },
     {
       title: "SFIT Alumni Newsletter Design",
       type: "Content & Design",
       desc: "Designed and authored monthly digital newsletters for 1000+ alumni network. Combined Canva visuals with copywriting for alumni engagement.",
       tags: ["Newsletter", "Canva", "1000+ Reach"],
-      image: "/src/assets/alumni_newsletter.png"
+      image: newsletterImg
     },
     {
       title: "HackX2.0 National Hackathon — Anchor",
@@ -505,7 +516,7 @@ function App() {
           <div className="hero-content">
             {/* Profile Avatar */}
             <div className="hero-avatar-wrapper">
-              <img src="/src/assets/drishti.png" alt="Drishti Kakkar" className="hero-avatar" />
+              <img src={drishtiImg} alt="Drishti Kakkar" className="hero-avatar" />
             </div>
             <span className="hero-subtitle">
               <span style={{ display: 'inline-block', width: '8px', height: '8px', background: 'var(--color-accent)', borderRadius: '50%', marginRight: '8px', animation: 'blink 1.5s infinite' }}></span>
