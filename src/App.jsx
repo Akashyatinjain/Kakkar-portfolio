@@ -100,47 +100,47 @@ function App() {
   const valueProps = [
     {
       icon: <Zap size={28} />,
-      title: 'The Unicorn Profile',
-      subtitle: 'Logic meets Storytelling',
+      title: 'Cross-functional thinking',
+      subtitle: 'Design, code, and communication',
       bullets: [
-        'Engineer + Creative Director',
-        'Backend Development & API Design',
-        'UI/UX Design & Creative Direction'
+        'Comfortable moving between product, UI, and implementation',
+        'Builds interfaces that are useful rather than just visually busy',
+        'Knows how to explain ideas clearly to different people'
       ],
-      tags: ['Frontend Eng.', 'UI/UX Eng.', 'Product Strategy', 'Creative Tech']
+      tags: ['Product Thinking', 'Frontend', 'Systems', 'Storytelling']
     },
     {
       icon: <Target size={28} />,
-      title: 'High-Impact Leadership',
-      subtitle: 'Self-starter who executes',
+      title: 'Work that actually ships',
+      subtitle: 'Practical, hands-on execution',
       bullets: [
-        'CSI Student Chapter Vice Chair',
-        'NSS Coordinator & Volunteer Head',
-        'Anchored national event with 300+ devs'
+        'Has worked across web apps, AI tools, campaigns, and live events',
+        'Prefers solving real problems over chasing novelty',
+        'Can take a rough idea and turn it into something usable'
       ],
-      tags: ['Team Management', 'Public Speaking', 'Event Anchoring']
+      tags: ['Execution', 'Ownership', 'Delivery', 'Problem Solving']
     },
     {
       icon: <Brain size={28} />,
-      title: 'Modern AI Stack',
-      subtitle: 'Beyond basic Python',
+      title: 'Technical depth without the noise',
+      subtitle: 'Useful AI and engineering work',
       bullets: [
-        'Groq & Llama 3.3 Pipelines',
-        'Gemini & Claude API integrations',
-        'Deepfake detection & ML pipelines'
+        'Built AI workflows around LLM APIs and practical integrations',
+        'Experienced with Python, React, and backend services',
+        'Strong interest in tools that feel genuinely helpful'
       ],
-      tags: ['Prompt Engineering', 'LLM APIs', 'Computer Vision', 'NLP']
+      tags: ['Python', 'React', 'LLM APIs', 'Automation']
     },
     {
       icon: <Shield size={28} />,
-      title: 'Real-World Solutions',
-      subtitle: 'No "To-Do list" projects',
+      title: 'A grounded creative edge',
+      subtitle: 'Design, direction, and clarity',
       bullets: [
-        'IoT smart lockers with Arduino OTP',
-        'JP Morgan QR medicine locators',
-        'Hospital WhatsApp chatbots'
+        'Brings visual thinking into technical work rather than keeping them separate',
+        'Has worked with branding, content, campaigns, and on-set production',
+        'Keeps the details sharp whether the medium is code or a camera'
       ],
-      tags: ['IoT + Hardware', 'Civic Tech', 'Security', 'Healthcare']
+      tags: ['Branding', 'Content', 'Direction', 'Visual Thinking']
     }
   ];
 
@@ -264,52 +264,52 @@ function App() {
   const projects = [
     {
       title: "CareerGPS AI",
-      desc: "AI-powered career guidance platform that analyzes resumes, GitHub profiles, and LinkedIn pages to provide personalized career path recommendations, skill gap analysis, and mock interview simulations.",
+      desc: "A career guidance tool that combines resume and profile analysis with practical suggestions, designed to help people think more clearly about their next step.",
       tech: ["React", "Node.js", "Llama 3.3", "Groq AI", "FastAPI"],
       category: "ai",
       icon: <Brain size={24} />,
-      highlight: "Agentic AI workflow with Groq inference",
+      highlight: "Built around a practical AI workflow",
       github: "https://github.com/drishti-kakkar/CareerGPS-AI",
       image: careergpsImg
     },
     {
       title: "CyberGuard AI",
-      desc: "Rapid-analysis security tool that detects spam copy, phishing links, and identifies deepfake images or AI-generated edits from user uploads in under 2 seconds with 94%+ accuracy.",
+      desc: "A rapid security analysis tool for identifying suspicious content and AI-generated edits, focused on speed and utility rather than flashy demos.",
       tech: ["Python", "Computer Vision", "Deep Learning", "Flask"],
       category: "ai",
       icon: <Shield size={24} />,
-      highlight: "Sub-2-second deepfake detection",
+      highlight: "Fast, useful detection work",
       github: "https://github.com/drishti-kakkar/CyberGuard-AI",
       image: cyberguardImg
     },
 
     {
       title: "IoT Contactless Smart Locker",
-      desc: "Space-efficient physical delivery locker integrating OTP authentication, Wi-Fi connectivity, electronic lock control, and sensor-based package detection for contactless delivery.",
+      desc: "A compact locker system built with hardware and software working together for secure, contactless delivery and access control.",
       tech: ["Arduino", "Raspberry Pi", "React", "Node.js", "Embedded C"],
       category: "iot",
       icon: <Lock size={24} />,
-      highlight: "Hardware + Software integration",
+      highlight: "Integrated hardware and software",
       github: "https://github.com/drishti-kakkar/Smart-Locker-IoT",
       image: lockerImg
     },
     {
       title: "AI Chatbot (QR Locator)",
-      desc: "Integrated WhatsApp chatbot linked with hospital QR scanners, helping patients locate generic medicines, read store catalogs, and navigate directories — built during JP Morgan Chase mentorship.",
+      desc: "A WhatsApp-based support assistant for hospital navigation, built with real-world utility in mind and shaped by mentorship experience.",
       tech: ["Python", "WhatsApp API", "SQL", "QR Scanners"],
       category: "ai",
       icon: <Cpu size={24} />,
-      highlight: "Healthcare deployment with mentorship",
+      highlight: "Focused on accessibility and clarity",
       github: "https://github.com/drishti-kakkar/AI-Chatbot-QR",
       image: heroImg
     },
     {
       title: "Netflix Data Platform",
-      desc: "Data-driven analytics platform featuring search indexes, genre aggregations, trend analysis, and interactive SVG charts built from Netflix catalog datasets with advanced filtering.",
+      desc: "A data-focused interface for exploring catalog patterns and trends with interactive visualizations and a strong emphasis on clarity.",
       tech: ["React", "D3.js / SVG Charts", "Node.js", "Python"],
       category: "web",
       icon: <BarChart2 size={24} />,
-      highlight: "Production-quality data visualization",
+      highlight: "Built for information, not noise",
       github: "https://github.com/drishti-kakkar/Netflix-Data-Platform",
       image: reactSvg
     }
@@ -518,28 +518,27 @@ function App() {
             <div className="hero-avatar-wrapper">
               <img src={drishtiImg} alt="Drishti Kakkar" className="hero-avatar" />
             </div>
-            <span className="hero-subtitle">
-              <span style={{ display: 'inline-block', width: '8px', height: '8px', background: 'var(--color-accent)', borderRadius: '50%', marginRight: '8px', animation: 'blink 1.5s infinite' }}></span>
-              SYSTEM.INIT() // AVAILABLE FOR HIRE
+            <span className="hero-subtitle" style={{ textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 600 }}>
+              <span style={{ display: 'inline-block', width: '8px', height: '8px', background: '#10B981', borderRadius: '50%', marginRight: '8px', animation: 'blink 1.5s infinite' }}></span>
+              Open to product, design, and engineering work
             </span>
             <h1 className="hero-title">
-              Hi, I'm <span className="highlight">Drishti</span><br />
+              I’m <span className="highlight">Drishti</span><br />
               <span style={{ fontSize: '0.6em', fontWeight: 500, color: 'var(--color-text-secondary)' }}>
-                I build where <span className="highlight">logic</span> meets <span className="highlight">storytelling</span>
+                building digital things that feel <span className="highlight">clear</span>, <span className="highlight">useful</span>, and <span className="highlight">human</span>
               </span>
             </h1>
-            {/* Roles list */}
             <div className="hero-roles">
-              <span>Full Stack Developer</span>
+              <span>Developer</span>
               <span className="bullet-sep">•</span>
-              <span>AI Engineer</span>
+              <span>Designer</span>
               <span className="bullet-sep">•</span>
-              <span>Graphic Designer</span>
+              <span>Storyteller</span>
               <span className="bullet-sep">•</span>
-              <span>Assistant Director</span>
+              <span>Builder</span>
             </div>
             <p className="hero-description" style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', maxWidth: '650px', marginTop: '-0.25rem' }}>
-              IT undergrad at SFIT Mumbai who codes AI agents by morning and directs commercial videos by evening.
+              I work across code, visuals, and communication, and I’m most interested in projects where the experience matters as much as the idea.
             </p>
 
             {/* Stats strip */}
@@ -569,11 +568,9 @@ function App() {
       </header>
 
       <AnimatedSection id="why-hire">
-        <h2>
-          <span className="highlight">00.</span> Why Hire Me
-        </h2>
-        <p style={{ fontSize: '1.05rem', maxWidth: '700px', marginBottom: '2.5rem', marginTop: '-0.5rem' }}>
-          What a recruiter notices in <span className="highlight">6 seconds</span> — the things that make my profile different from 99% of undergrad candidates.
+        <h2>What I Bring</h2>
+        <p style={{ fontSize: '1.05rem', maxWidth: '700px', marginBottom: '2.5rem', marginTop: '-0.5rem', color: 'var(--color-text-secondary)' }}>
+          I tend to work best where product thinking, visual craft, and execution meet. That’s where the strongest ideas usually end up.
         </p>
         <div className="value-props-grid">
           {valueProps.map((vp, i) => (
@@ -602,19 +599,17 @@ function App() {
 
 
       <AnimatedSection id="about">
-        <h2>
-          <span className="highlight">01.</span> About Me
-        </h2>
+        <h2>About Me</h2>
         <div className="about-grid">
           <div className="about-text">
             <p>
-              I am a B.Tech IT undergraduate at St. Francis Institute of Technology with an average CGPA of <strong className="highlight">8.6</strong>. Most candidates are either purely technical or purely creative — I operate comfortably in both worlds.
+              I’m an IT undergraduate in Mumbai who spends most of my time building things that are useful, polished, and easy to understand. That usually means web apps, AI features, brand visuals, or content that needs to connect with people.
             </p>
             <p>
-              My engineering stack revolves around Python, React, Node.js, and Machine Learning — building data pipelines, integrating LLMs, and shipping full-stack applications. I focus on building <strong className="highlight">production-grade applications</strong> that solve real problems.
+              My work sits somewhere between engineering and communication. I like writing code, but I also care a lot about how something feels, reads, and lands with the people using it.
             </p>
             <p style={{ marginBottom: '0.75rem' }}>
-              Outside the compiler, I balance several professional creative and leadership roles:
+              Outside of the usual academic work, I’ve been involved in design, production, and leadership roles that have made me more comfortable working across teams and formats.
             </p>
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', paddingLeft: '0.2rem', marginBottom: '1.25rem', listStyle: 'none' }}>
               <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -631,7 +626,6 @@ function App() {
               </li>
             </ul>
 
-            {/* Education highlight card */}
             <div className="education-highlight">
               <GraduationCap size={24} className="highlight" />
               <div>
@@ -647,29 +641,29 @@ function App() {
               <div className="feature-icon-wrapper">
                 <Code size={32} />
               </div>
-              <h3 style={{ fontSize: '1.1rem' }}>Full-Stack Dev</h3>
-              <p style={{ fontSize: '0.85rem' }}>React, Node.js, FastAPI, SQL — end-to-end application engineering with IoT integration capabilities.</p>
+              <h3 style={{ fontSize: '1.1rem' }}>Product-minded development</h3>
+              <p style={{ fontSize: '0.85rem' }}>React, Node.js, FastAPI, and SQL work that is built to be useful rather than just impressive on paper.</p>
             </div>
             <div className="about-feature-card">
               <div className="feature-icon-wrapper">
                 <Video size={32} />
               </div>
-              <h3 style={{ fontSize: '1.1rem' }}>Film & Direction</h3>
-              <p style={{ fontSize: '0.85rem' }}>Real production credits — AD on Saregama music videos, TV commercials, script writing, and Final Cut Pro editing.</p>
+              <h3 style={{ fontSize: '1.1rem' }}>Visual and narrative work</h3>
+              <p style={{ fontSize: '0.85rem' }}>Branding, campaigns, social content, and production work that all come from the same design sense.</p>
             </div>
             <div className="about-feature-card">
               <div className="feature-icon-wrapper">
                 <Brain size={32} />
               </div>
-              <h3 style={{ fontSize: '1.1rem' }}>AI & LLM Eng.</h3>
-              <p style={{ fontSize: '0.85rem' }}>Groq/Llama 3.3 APIs, prompt engineering, deepfake detection, and agentic AI pipelines — not just model consumers.</p>
+              <h3 style={{ fontSize: '1.1rem' }}>Practical AI usage</h3>
+              <p style={{ fontSize: '0.85rem' }}>LLM integrations and automation that are built around actual problems, not novelty for its own sake.</p>
             </div>
             <div className="about-feature-card">
               <div className="feature-icon-wrapper">
                 <Users size={32} />
               </div>
-              <h3 style={{ fontSize: '1.1rem' }}>Leadership & PR</h3>
-              <p style={{ fontSize: '0.85rem' }}>CSI Vice Chair, NSS Head, GDG PR Exec — managing 50+ member teams and anchoring national-level hackathons.</p>
+              <h3 style={{ fontSize: '1.1rem' }}>Leadership with calm</h3>
+              <p style={{ fontSize: '0.85rem' }}>Experience coordinating people and events without losing sight of the quality of the work itself.</p>
             </div>
           </div>
         </div>
@@ -909,10 +903,10 @@ function App() {
       {/* ═══════════════════════════════════════ */}
       <AnimatedSection id="creative">
         <h2>
-          <span className="highlight">05.</span> Creative Showcase
+          <span className="highlight">05.</span> Creative Work
         </h2>
         <p style={{ fontSize: '1.05rem', maxWidth: '700px', marginBottom: '2rem', marginTop: '-0.5rem' }}>
-          Visual proof of creative work — because <span className="highlight">designers and directors hire with their eyes</span>.
+          A few pieces from the design and production side of my work, where the visual quality matters just as much as the idea.
         </p>
         <div className="creative-grid">
           {creativeWorks.map((work, index) => (
@@ -956,7 +950,7 @@ function App() {
         <div style={{ marginTop: '2rem', padding: '1.25rem', border: '1px dashed var(--color-border)', borderRadius: '8px', textAlign: 'center' }}>
           <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', margin: 0 }}>
             <Image size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '6px' }} />
-            Full portfolio of design work, video frames, and behind-the-scenes content available upon request. <a href="#contact" className="highlight" style={{ textDecoration: 'underline' }}>Get in touch</a> to see more.
+            There’s more where this came from — design work, campaign materials, and production references are available on request.
           </p>
         </div>
       </AnimatedSection>
@@ -995,9 +989,9 @@ function App() {
         </h2>
         <div className="contact-grid">
           <div className="contact-info">
-            <h3 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>Let's collaborate!</h3>
+            <h3 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>Let’s talk</h3>
             <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', lineHeight: '1.5', marginBottom: '1.5rem' }}>
-              I’m open to internships, freelance product roles, and creative tech collaborations that sit at the intersection of code and digital design.
+              I’m open to internships, freelance work, and collaborations where strong execution matters as much as the idea itself.
             </p>
             
             <div className="contact-methods-grid">
@@ -1013,7 +1007,7 @@ function App() {
                 <Calendar size={20} style={{ color: 'var(--color-accent)' }} />
                 <div>
                   <h4>Availability</h4>
-                  <p>Open for full-time internships & freelance projects</p>
+                  <p>Usually available for short-term work, internships, and focused projects</p>
                 </div>
               </div>
             </div>
@@ -1062,13 +1056,13 @@ function App() {
             {contactStatus === 'success' && (
               <div className="contact-feedback success">
                 <CheckCircle size={16} />
-                <span>Message sent successfully! I'll reply within 24 hours.</span>
+                <span>Message sent successfully. I’ll get back to you as soon as I can.</span>
               </div>
             )}
             {contactStatus === 'error' && (
               <div className="contact-feedback error">
                 <AlertCircle size={16} />
-                <span>Something went wrong. Please email me directly at drishtikakkar15@gmail.com</span>
+                <span>Something went wrong. You can also email me directly at drishtikakkar15@gmail.com.</span>
               </div>
             )}
           </form>
