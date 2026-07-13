@@ -7,7 +7,6 @@ import careergpsImg from './assets/careergps_mockup.png';
 import cyberguardImg from './assets/cyberguard_mockup.png';
 import lockerImg from './assets/locker_mockup.png';
 import saregamaImg from './assets/saregama_video.png';
-import zoeticsImg from './assets/zoetics_catalog.png';
 import newsletterImg from './assets/alumni_newsletter.png';
 import heroImg from './assets/hero.png';
 import reactSvg from './assets/react.svg';
@@ -159,18 +158,7 @@ function App() {
           "Designed custom HTML email campaigns to improve click-rates and subscriber reach."
         ]
       },
-      {
-        title: "Graphic Designer",
-        company: "Zoetics (B2B Business)",
-        period: "May 2025 - Present",
-        tags: ["Figma", "Photoshop", "Branding", "B2B Design"],
-        desc: "Designing B2B product catalogs, digital creatives, brand identity visuals, and holiday greeting assets for corporate clients.",
-        impact: "Delivered 30+ B2B assets",
-        achievements: [
-          "Designed professional B2B product catalogs and brand identities for corporate clients.",
-          "Delivered 30+ corporate creatives ensuring brand consistency across campaigns."
-        ]
-      },
+      // Zoetics role removed per request
       {
         title: "Assistant Director",
         company: "Final Cut Studio & Production",
@@ -315,85 +303,88 @@ function App() {
     }
   ];
 
-  // Skills Data — grouped by competency level instead of arbitrary percentages
+  // Skills Data — categorized and mapped from CV content
   const skills = {
-    tech: {
-      advanced: [
-        { name: "Python", rating: 5 },
-        { name: "React.js", rating: 4 },
-        { name: "JavaScript", rating: 4 },
-        { name: "HTML / CSS", rating: 5 }
-      ],
-      intermediate: [
-        { name: "Node.js", rating: 4 },
-        { name: "Express", rating: 3 },
-        { name: "FastAPI", rating: 4 },
-        { name: "Flask", rating: 3 },
-        { name: "SQL", rating: 4 },
-        { name: "Next.js", rating: 3 },
-        { name: "Tailwind CSS", rating: 5 }
-      ],
-      familiar: [
-        { name: "C", rating: 3 },
-        { name: "Java", rating: 3 },
-        { name: "DSA", rating: 3 },
-        { name: "Embedded C", rating: 3 },
-        { name: "Arduino", rating: 4 },
-        { name: "Raspberry Pi", rating: 3 }
-      ]
-    },
-    ai: {
-      advanced: [
-        { name: "Prompt Engineering", rating: 5 },
-        { name: "LLM API Integration", rating: 5 }
-      ],
-      intermediate: [
-        { name: "Llama 3.3 / Groq", rating: 4 },
-        { name: "Gemini API", rating: 4 },
-        { name: "Claude API", rating: 4 },
-        { name: "NLP", rating: 3 }
-      ],
-      familiar: [
-        { name: "Computer Vision", rating: 3 },
-        { name: "OpenCV", rating: 3 },
-        { name: "IBM Watson Studio", rating: 3 },
-        { name: "Deep Learning", rating: 3 }
-      ]
-    },
-    creative: {
-      advanced: [
-        { name: "Canva", rating: 5 },
-        { name: "Adobe Photoshop", rating: 4 },
-        { name: "Content Copywriting", rating: 4 },
-        { name: "Social Media Strategy", rating: 4 }
-      ],
-      intermediate: [
-        { name: "UI/UX Design (Figma)", rating: 4 },
-        { name: "Video Editing (Final Cut Pro)", rating: 4 },
-        { name: "Digital PR", rating: 3 }
-      ],
-      familiar: [
-        { name: "After Effects", rating: 2 },
-        { name: "Brand Identity Design", rating: 3 },
-        { name: "Motion Graphics", rating: 2 }
-      ]
-    },
-    leadership: {
-      advanced: [
-        { name: "Public Speaking & Anchoring", rating: 5 },
-        { name: "Event Management", rating: 5 },
-        { name: "Team Leadership", rating: 5 }
-      ],
-      intermediate: [
-        { name: "Proposal & Doc Drafting", rating: 4 },
-        { name: "PR Strategy", rating: 4 },
-        { name: "Newsletter Design", rating: 4 }
-      ],
-      familiar: [
-        { name: "Budget Management", rating: 3 },
-        { name: "Stakeholder Communication", rating: 3 }
-      ]
-    }
+    Frontend: [
+      'React',
+      'Next.js',
+      'Tailwind CSS',
+      'HTML',
+      'CSS',
+      'JavaScript'
+    ],
+    Backend: [
+      'Python',
+      'Node.js',
+      'FastAPI',
+      'Flask',
+      'Express',
+      'SQL',
+      'Advanced SQL',
+      'Pandas'
+    ],
+    Languages: [
+      'Python',
+      'C',
+      'Java'
+    ],
+    'AI / ML': [
+      'AI / ML (basic)',
+      'Llama 3.3',
+      'Groq',
+      'Prompt Engineering'
+    ],
+    'AI Tools': [
+      'ChatGPT',
+      'Gemini',
+      'Claude',
+      'Perplexity',
+      'Gamma',
+      'Blackbox',
+      'HappyScribe',
+      'Bolt',
+      'Apify',
+      'Goose',
+      'Chroniclehq'
+    ],
+    Data: [
+      'Power BI',
+      'Data Analytics',
+      'Pandas',
+      'Plotly',
+      'DSA'
+    ],
+    DevOps: [
+      'Vercel',
+      'Render',
+      'Streamlit',
+      'Railway',
+      'Deployment',
+      'Automation'
+    ],
+    Creative: [
+      'UI/UX',
+      'Adobe Photoshop',
+      'Canva',
+      'Poster & Carousel Design',
+      'Social Media Design',
+      'Content Marketing',
+      'Copywriting'
+    ],
+    Research: [
+      'Documentation',
+      'Data Interpretation',
+      'Desk Research',
+      'Proposal Drafting'
+    ],
+    'Communication & Leadership': [
+      'Public Speaking',
+      'Presentation Skills',
+      'Time Management',
+      'Team Collaboration',
+      'Multitasking',
+      'Anchoring / Public Speaker'
+    ]
   };
 
   // Creative Showcase Data — updated with visual mockups
@@ -405,13 +396,7 @@ function App() {
       tags: ["Direction", "Saregama", "Production"],
       image: saregamaImg
     },
-    {
-      title: "Zoetics B2B Brand Catalog",
-      type: "Graphic Design",
-      desc: "Designed comprehensive product catalogs, digital creatives, and branded holiday assets for corporate B2B clients. 30+ branded deliverables.",
-      tags: ["Figma", "Photoshop", "B2B Branding"],
-      image: zoeticsImg
-    },
+    // Zoetics creative work removed as requested
     {
       title: "SFIT Alumni Newsletter Design",
       type: "Content & Design",
@@ -487,25 +472,7 @@ function App() {
     projectCategory === 'all' || project.category === projectCategory
   );
 
-  // Get skills for the selected category
-  const getSkillsForCategory = () => {
-    if (skillCategory === 'all') {
-      // Merge all categories
-      const allExpert = Object.values(skills).flatMap(s => s.advanced);
-      const allProficient = Object.values(skills).flatMap(s => s.intermediate);
-      const allFamiliar = Object.values(skills).flatMap(s => s.familiar);
-      return { advanced: allExpert, intermediate: allProficient, familiar: allFamiliar };
-    }
-    return skills[skillCategory] || { advanced: [], intermediate: [], familiar: [] };
-  };
-
-  const currentSkills = getSkillsForCategory();
-
-  const renderStars = (rating) => {
-    const filledStars = '★'.repeat(rating);
-    const emptyStars = '☆'.repeat(5 - rating);
-    return <span className="skill-stars" style={{ marginLeft: '8px', color: 'var(--color-accent)', opacity: 0.85, fontSize: '0.85rem' }}>{filledStars}{emptyStars}</span>;
-  };
+  // We'll render the `skills` categories directly below in the UI
 
   return (
     <div style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -613,9 +580,6 @@ function App() {
             </p>
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', paddingLeft: '0.2rem', marginBottom: '1.25rem', listStyle: 'none' }}>
               <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ color: 'var(--color-accent)' }}>✔</span> <span><strong>Graphic Designer</strong> at Zoetics</span>
-              </li>
-              <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span style={{ color: 'var(--color-accent)' }}>✔</span> <span><strong>Assistant Director</strong> on Saregama productions</span>
               </li>
               <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -672,79 +636,30 @@ function App() {
       {/* ═══════════════════════════════════════ */}
       {/* SKILLS MATRIX                          */}
       {/* ═══════════════════════════════════════ */}
+      {/* Simplified skills section: Frontend / Backend lists */}
+      {
+        /* Define simple skill lists placed above return */
+      }
+
       <AnimatedSection id="skills">
         <h2>
-          <span className="highlight">02.</span> Skills Matrix
+          <span className="highlight">02.</span> Skills
         </h2>
-        <div className="skills-tabs">
-          {['all', 'tech', 'ai', 'creative', 'leadership'].map(tab => (
-            <button
-              key={tab}
-              onClick={() => setSkillCategory(tab)}
-              className={`skill-tab-btn ${skillCategory === tab ? 'active' : ''}`}
-            >
-              {tab.toUpperCase()}
-            </button>
+        <p style={{ color: 'var(--color-text-secondary)', maxWidth: '700px', marginTop: '-0.5rem' }}>
+          A concise view of core frontend and backend skills.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginTop: '1.25rem' }}>
+          {Object.entries(skills).map(([cat, items]) => (
+            <div key={cat}>
+              <h3 style={{ marginBottom: '0.6rem' }}>{cat}</h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+                {items.map(s => (
+                  <span key={s} className="skill-badge proficient" style={{ display: 'inline-flex', alignItems: 'center' }}>{s}</span>
+                ))}
+              </div>
+            </div>
           ))}
-        </div>
-
-        <div className="skills-levels">
-          {/* Advanced Level */}
-          {currentSkills.advanced.length > 0 && (
-            <div className="skill-level-group">
-              <div className="skill-level-label">
-                <span className="skill-level-dot expert"></span>
-                <span>Advanced</span>
-                <span className="skill-level-line"></span>
-              </div>
-              <div className="skill-badges">
-                {currentSkills.advanced.map((skill, i) => (
-                  <span key={i} className="skill-badge expert" style={{ display: 'inline-flex', alignItems: 'center' }}>
-                    <span>{skill.name}</span>
-                    {renderStars(skill.rating)}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Intermediate Level */}
-          {currentSkills.intermediate.length > 0 && (
-            <div className="skill-level-group">
-              <div className="skill-level-label">
-                <span className="skill-level-dot proficient"></span>
-                <span>Intermediate</span>
-                <span className="skill-level-line"></span>
-              </div>
-              <div className="skill-badges">
-                {currentSkills.intermediate.map((skill, i) => (
-                  <span key={i} className="skill-badge proficient" style={{ display: 'inline-flex', alignItems: 'center' }}>
-                    <span>{skill.name}</span>
-                    {renderStars(skill.rating)}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Familiar Level */}
-          {currentSkills.familiar.length > 0 && (
-            <div className="skill-level-group">
-              <div className="skill-level-label">
-                <span className="skill-level-dot familiar"></span>
-                <span>Learning</span>
-                <span className="skill-level-line"></span>
-              </div>
-              <div className="skill-badges">
-                {currentSkills.familiar.map((skill, i) => (
-                  <span key={i} className="skill-badge familiar" style={{ display: 'inline-flex', alignItems: 'center' }}>
-                    <span>{skill.name}</span>
-                    {renderStars(skill.rating)}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </AnimatedSection>
 
