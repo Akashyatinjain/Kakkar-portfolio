@@ -3,13 +3,10 @@ import { Menu, X, Terminal as TerminalIcon } from 'lucide-react';
 
 const navItems = [
   { id: 'home', label: 'home' },
-  { id: 'why-hire', label: 'why_hire' },
   { id: 'about', label: 'about' },
   { id: 'skills', label: 'skills' },
-  { id: 'experience', label: 'experience' },
   { id: 'projects', label: 'projects' },
-  { id: 'creative', label: 'creative' },
-  { id: 'certifications', label: 'certs' },
+  { id: 'experience', label: 'experience' },
   { id: 'contact', label: 'contact' }
 ];
 

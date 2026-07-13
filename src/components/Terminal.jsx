@@ -70,7 +70,7 @@ const Terminal = () => {
         "",
         "4. REAL-WORLD PROJECTS (not to-do apps)",
         "   → IoT smart lockers (Arduino + React)",
-        "   → Women's safety ecosystem (GPS + gesture SOS)",
+
         "   → JP Morgan Chase mentorship deliverable",
         "",
         "5. STRONG ACADEMICS",
@@ -109,10 +109,7 @@ const Terminal = () => {
         "    Sub-2-second deepfake detection, 94%+ accuracy.",
         "    Computer Vision + Deep Learning pipeline.",
         "",
-        "  ★ SheShield",
-        "    Civic tech — gesture-based SOS + real GPS tracking.",
-        "    Women's safety ecosystem with smartwatch integration.",
-        "",
+
         "  ★ Smart Locker (IoT)",
         "    Hardware meets software — Arduino + Raspberry Pi",
         "    OTP auth + sensor-based contactless delivery.",

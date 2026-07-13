@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
-import Terminal from './components/Terminal';
 import {
   Github,
   Linkedin,
@@ -15,7 +14,6 @@ import {
   Users,
   Send,
   Shield,
-  Compass,
   Lock,
   Cpu,
   BarChart2,
@@ -30,7 +28,11 @@ import {
   Image,
   Loader2,
   CheckCircle,
-  AlertCircle
+  Download,
+  Calendar,
+  AlertCircle,
+  ExternalLink,
+  BookOpen
 } from 'lucide-react';
 
 /* Intersection Observer hook for scroll-triggered animations */
@@ -77,10 +79,10 @@ function App() {
 
   // Stats for the hero counter strip
   const stats = [
-    { label: 'CGPA', value: '8.6', icon: <GraduationCap size={18} /> },
-    { label: 'Projects Built', value: '6+', icon: <Code size={18} /> },
-    { label: 'Leadership Roles', value: '5+', icon: <Users size={18} /> },
-    { label: 'Certifications', value: '8+', icon: <Award size={18} /> }
+    { label: 'CGPA Scale', value: '8.6/10', icon: <GraduationCap size={18} /> },
+    { label: 'Production Projects', value: '6 Deployed', icon: <Code size={18} /> },
+    { label: 'Leadership Roles', value: '5+ Active', icon: <Users size={18} /> },
+    { label: 'Verifiable Certs', value: '8+ Issued', icon: <Award size={18} /> }
   ];
 
   // "Why Hire Me" value proposition cards — derived from recruiter insights
@@ -89,28 +91,44 @@ function App() {
       icon: <Zap size={28} />,
       title: 'The Unicorn Profile',
       subtitle: 'Logic meets Storytelling',
-      desc: 'Rare duality of engineering depth and creative direction — I bridge the gap between design teams and dev teams, fluent in both languages.',
+      bullets: [
+        'Engineer + Creative Director',
+        'Backend Development & API Design',
+        'UI/UX Design & Creative Direction'
+      ],
       tags: ['Frontend Eng.', 'UI/UX Eng.', 'Product Strategy', 'Creative Tech']
     },
     {
       icon: <Target size={28} />,
       title: 'High-Impact Leadership',
       subtitle: 'Self-starter who executes',
-      desc: 'Vice Chairperson of CSI SFIT, NSS Head, GDG PR Executive — proven ability to manage teams, budgets, and deliver under pressure before graduation.',
+      bullets: [
+        'CSI Student Chapter Vice Chair',
+        'NSS Coordinator & Volunteer Head',
+        'Anchored national event with 300+ devs'
+      ],
       tags: ['Team Management', 'Public Speaking', 'Event Anchoring']
     },
     {
       icon: <Brain size={28} />,
       title: 'Modern AI Stack',
       subtitle: 'Beyond basic Python',
-      desc: 'Hands-on with Groq, Llama 3.3, Gemini & Claude APIs, building agentic AI platforms, deepfake detectors, and automated career pipelines — not toy projects.',
+      bullets: [
+        'Groq & Llama 3.3 Pipelines',
+        'Gemini & Claude API integrations',
+        'Deepfake detection & ML pipelines'
+      ],
       tags: ['Prompt Engineering', 'LLM APIs', 'Computer Vision', 'NLP']
     },
     {
       icon: <Shield size={28} />,
       title: 'Real-World Solutions',
       subtitle: 'No "To-Do list" projects',
-      desc: 'From IoT smart lockers with Arduino OTP systems to women\'s safety ecosystems with gesture-based SOS — every project solves a real problem.',
+      bullets: [
+        'IoT smart lockers with Arduino OTP',
+        'JP Morgan QR medicine locators',
+        'Hospital WhatsApp chatbots'
+      ],
       tags: ['IoT + Hardware', 'Civic Tech', 'Security', 'Healthcare']
     }
   ];
@@ -123,40 +141,60 @@ function App() {
         company: "EvolvEd",
         period: "May 2026 - Present",
         tags: ["Content Writing", "PR", "Marketing", "HTML Emails"],
-        desc: "Creating engaging content for official channels, drafting PR newsletters, LinkedIn updates, and custom HTML email marketing campaigns that drive user engagement.",
-        impact: "Authoring weekly PR newsletters reaching 500+ subscribers"
+        desc: "Creating engaging content for official channels, drafting PR newsletters, LinkedIn updates, and custom HTML email marketing campaigns.",
+        impact: "Authoring weekly PR newsletters reaching 500+ subscribers",
+        achievements: [
+          "Authored weekly PR newsletters and LinkedIn updates driving community engagement.",
+          "Designed custom HTML email campaigns to improve click-rates and subscriber reach."
+        ]
       },
       {
         title: "Graphic Designer",
         company: "Zoetics (B2B Business)",
         period: "May 2025 - Present",
         tags: ["Figma", "Photoshop", "Branding", "B2B Design"],
-        desc: "Designing B2B product catalogs, digital creatives, brand identity visuals, and holiday greeting assets for corporate clients — bridging design and business.",
-        impact: "Delivering 30+ branded assets for corporate B2B campaigns"
+        desc: "Designing B2B product catalogs, digital creatives, brand identity visuals, and holiday greeting assets for corporate clients.",
+        impact: "Delivered 30+ B2B assets",
+        achievements: [
+          "Designed professional B2B product catalogs and brand identities for corporate clients.",
+          "Delivered 30+ corporate creatives ensuring brand consistency across campaigns."
+        ]
       },
       {
         title: "Assistant Director",
         company: "Final Cut Studio & Production",
         period: "Sep 2025 - Oct 2025",
         tags: ["Direction", "Production", "Saregama Music", "Film"],
-        desc: "Served as Assistant Director for a high-profile Saregama music video. Orchestrated shoot logistics, script breakdowns, scene scheduling, and directed on-set talent.",
-        impact: "AD on commercial Saregama music video — real production credits"
+        desc: "Served as Assistant Director for a high-profile Saregama music video, managing logistics and directing on-set talent.",
+        impact: "Commercial music video AD credits",
+        achievements: [
+          "Coordinated shoot logistics, script breakdowns, and scene schedules for commercial production.",
+          "Directed on-set talent and managed camera team during multi-location schedules."
+        ]
       },
       {
         title: "Data Science & Analytics Intern",
         company: "Remarkskill x IIT Hyderabad",
         period: "Jun 2025 - Jul 2025",
         tags: ["Python", "Machine Learning", "Data Visualization", "IIT"],
-        desc: "Gained hands-on training with exploratory data analysis, data pre-processing, and building regression models on real-world datasets under IIT Hyderabad mentorship.",
-        impact: "Built 3 ML models on production-grade IIT datasets"
+        desc: "Gained hands-on training with exploratory data analysis, data pre-processing, and building regression models on real-world datasets.",
+        impact: "Built 3 ML models",
+        achievements: [
+          "Developed and deployed 3 regression models on production-grade IIT datasets.",
+          "Conducted detailed exploratory data analysis and data visualization to derive insights."
+        ]
       },
       {
         title: "Actor & Assistant Director Intern",
         company: "Momomoto Studios",
         period: "Apr 2024 - Jul 2024",
         tags: ["Acting", "Scripting", "Direction", "TV Commercial"],
-        desc: "Contributed to script development, scene execution, and worked as an actor on a television commercial project — real-world media production experience.",
-        impact: "On-screen acting + direction in TV commercial production"
+        desc: "Contributed to script development, scene execution, and worked as an actor on a commercial television project.",
+        impact: "TV commercial acting + AD credits",
+        achievements: [
+          "Contributed to script development and scene blocking during commercial filming.",
+          "Worked on-screen as actor in short-form promotional commercial content."
+        ]
       }
     ],
     leadership: [
@@ -165,32 +203,48 @@ function App() {
         company: "CSI SFIT",
         period: "Jun 2026 - Present",
         tags: ["Technical Association", "Management", "Leadership"],
-        desc: "Elected to lead CSI Student Chapter — coordinating tech workshops, hackathons, and overseeing administrative/operational activities of the entire branch.",
-        impact: "Managing 50+ member team & coordinating college-wide tech events"
+        desc: "Elected to lead CSI Student Chapter — coordinating tech workshops, hackathons, and overseeing branch administrative activities.",
+        impact: "Leading 50+ member team",
+        achievements: [
+          "Directing CSI Student Chapter operations, managing a core committee of 50+ members.",
+          "Coordinating college-wide technical workshops, speaker sessions, and national hackathons."
+        ]
       },
       {
         title: "NSS Head",
         company: "NSS SFIT",
         period: "Jun 2026 - Present",
         tags: ["Social Welfare", "Leadership", "Event Management"],
-        desc: "Directing college community service projects, blood donation campaigns, tree plantation drives, and organizing welfare events across Mumbai.",
-        impact: "Directing social welfare campaigns impacting 200+ participants"
+        desc: "Directing college community service projects, blood donation campaigns, tree plantation drives, and organizing welfare events.",
+        impact: "Directing campaigns with 200+ participants",
+        achievements: [
+          "Organized social welfare campaigns and donation camps impacting over 200+ participants.",
+          "Managed budget allocations, public relations, and operational logistics for NSS activities."
+        ]
       },
       {
         title: "Public Relations Executive",
         company: "Google Developers Group (GDG) SFIT",
         period: "Jan 2026 - May 2026",
         tags: ["Public Relations", "Content Writing", "Event PR", "Google"],
-        desc: "Managed promotional copy, scriptwriting, and anchoring for the HackX2.0 national-level hackathon — part of the global Google Developer ecosystem.",
-        impact: "Anchored HackX2.0 national hackathon reaching 300+ participants"
+        desc: "Managed promotional copy, scriptwriting, and anchoring for the HackX2.0 national-level hackathon.",
+        impact: "Anchored national event with 300+ devs",
+        achievements: [
+          "Wrote promotional copy and scripts for GDG technical workshops and national hackathons.",
+          "Anchored GDG HackX2.0, presenting to a national audience of 300+ participants."
+        ]
       },
       {
         title: "Joint PR & Social Media Head",
         company: "SFIT Alumni Association",
         period: "Jul 2025 - Jun 2026",
         tags: ["Alumni Engagement", "Social Media", "Webinars", "Newsletters"],
-        desc: "Managed alumni outreach campaigns, conducted interactive alumni webinars on Slido, and designed the monthly newsletter for 1000+ alumni network.",
-        impact: "Reaching 1000+ alumni through monthly digital newsletters"
+        desc: "Managed alumni outreach campaigns, conducted interactive alumni webinars on Slido, and designed the monthly newsletter.",
+        impact: "Reaching 1000+ alumni network",
+        achievements: [
+          "Designed and authored monthly digital newsletters sent to a network of 1000+ alumni.",
+          "Hosted interactive webinars using Slido for alumni career guidance sessions."
+        ]
       }
     ]
   };
@@ -203,8 +257,9 @@ function App() {
       tech: ["React", "Node.js", "Llama 3.3", "Groq AI", "FastAPI"],
       category: "ai",
       icon: <Brain size={24} />,
-      highlight: "Not a wrapper — full agentic AI pipeline with Groq inference",
-      github: "https://github.com/drishti-kakkar/CareerGPS-AI"
+      highlight: "Agentic AI workflow with Groq inference",
+      github: "https://github.com/drishti-kakkar/CareerGPS-AI",
+      image: "/src/assets/careergps_mockup.png"
     },
     {
       title: "CyberGuard AI",
@@ -212,26 +267,20 @@ function App() {
       tech: ["Python", "Computer Vision", "Deep Learning", "Flask"],
       category: "ai",
       icon: <Shield size={24} />,
-      highlight: "Sub-2-second deepfake detection with production-grade accuracy",
-      github: "https://github.com/drishti-kakkar/CyberGuard-AI"
+      highlight: "Sub-2-second deepfake detection",
+      github: "https://github.com/drishti-kakkar/CyberGuard-AI",
+      image: "/src/assets/cyberguard_mockup.png"
     },
-    {
-      title: "SheShield",
-      desc: "Smart women's safety ecosystem featuring gesture-based SOS alerts, real-time GPS tracking, companion smartwatch integration, and instant emergency contact notification.",
-      tech: ["React Native", "Node.js", "GPS APIs", "IoT", "WebSockets"],
-      category: "iot",
-      icon: <Compass size={24} />,
-      highlight: "Civic tech — gesture-based SOS with real GPS tracking",
-      github: "https://github.com/drishti-kakkar/SheShield"
-    },
+
     {
       title: "IoT Contactless Smart Locker",
       desc: "Space-efficient physical delivery locker integrating OTP authentication, Wi-Fi connectivity, electronic lock control, and sensor-based package detection for contactless delivery.",
       tech: ["Arduino", "Raspberry Pi", "React", "Node.js", "Embedded C"],
       category: "iot",
       icon: <Lock size={24} />,
-      highlight: "Hardware + Software integration — Arduino to React frontend",
-      github: "https://github.com/drishti-kakkar/Smart-Locker-IoT"
+      highlight: "Hardware + Software integration",
+      github: "https://github.com/drishti-kakkar/Smart-Locker-IoT",
+      image: "/src/assets/locker_mockup.png"
     },
     {
       title: "AI Chatbot (QR Locator)",
@@ -239,8 +288,9 @@ function App() {
       tech: ["Python", "WhatsApp API", "SQL", "QR Scanners"],
       category: "ai",
       icon: <Cpu size={24} />,
-      highlight: "JP Morgan Chase mentorship — real healthcare deployment",
-      github: "https://github.com/drishti-kakkar/AI-Chatbot-QR"
+      highlight: "Healthcare deployment with mentorship",
+      github: "https://github.com/drishti-kakkar/AI-Chatbot-QR",
+      image: "/src/assets/hero.png"
     },
     {
       title: "Netflix Data Platform",
@@ -248,32 +298,90 @@ function App() {
       tech: ["React", "D3.js / SVG Charts", "Node.js", "Python"],
       category: "web",
       icon: <BarChart2 size={24} />,
-      highlight: "Production-quality data visualization with D3.js",
-      github: "https://github.com/drishti-kakkar/Netflix-Data-Platform"
+      highlight: "Production-quality data visualization",
+      github: "https://github.com/drishti-kakkar/Netflix-Data-Platform",
+      image: "/src/assets/react.svg"
     }
   ];
 
   // Skills Data — grouped by competency level instead of arbitrary percentages
   const skills = {
     tech: {
-      expert: ["Python", "React.js", "JavaScript", "HTML / CSS"],
-      proficient: ["Node.js", "Express", "FastAPI", "Flask", "SQL", "Next.js", "Tailwind CSS"],
-      familiar: ["C", "Java", "DSA", "Embedded C", "Arduino", "Raspberry Pi"]
+      advanced: [
+        { name: "Python", rating: 5 },
+        { name: "React.js", rating: 4 },
+        { name: "JavaScript", rating: 4 },
+        { name: "HTML / CSS", rating: 5 }
+      ],
+      intermediate: [
+        { name: "Node.js", rating: 4 },
+        { name: "Express", rating: 3 },
+        { name: "FastAPI", rating: 4 },
+        { name: "Flask", rating: 3 },
+        { name: "SQL", rating: 4 },
+        { name: "Next.js", rating: 3 },
+        { name: "Tailwind CSS", rating: 5 }
+      ],
+      familiar: [
+        { name: "C", rating: 3 },
+        { name: "Java", rating: 3 },
+        { name: "DSA", rating: 3 },
+        { name: "Embedded C", rating: 3 },
+        { name: "Arduino", rating: 4 },
+        { name: "Raspberry Pi", rating: 3 }
+      ]
     },
     ai: {
-      expert: ["Prompt Engineering", "LLM API Integration"],
-      proficient: ["Llama 3.3 / Groq", "Gemini API", "Claude API", "NLP"],
-      familiar: ["Computer Vision", "OpenCV", "IBM Watson Studio", "Deep Learning"]
+      advanced: [
+        { name: "Prompt Engineering", rating: 5 },
+        { name: "LLM API Integration", rating: 5 }
+      ],
+      intermediate: [
+        { name: "Llama 3.3 / Groq", rating: 4 },
+        { name: "Gemini API", rating: 4 },
+        { name: "Claude API", rating: 4 },
+        { name: "NLP", rating: 3 }
+      ],
+      familiar: [
+        { name: "Computer Vision", rating: 3 },
+        { name: "OpenCV", rating: 3 },
+        { name: "IBM Watson Studio", rating: 3 },
+        { name: "Deep Learning", rating: 3 }
+      ]
     },
     creative: {
-      expert: ["Canva", "Adobe Photoshop", "Content Copywriting", "Social Media Strategy"],
-      proficient: ["UI/UX Design (Figma)", "Video Editing (Final Cut Pro)", "Digital PR"],
-      familiar: ["After Effects", "Brand Identity Design", "Motion Graphics"]
+      advanced: [
+        { name: "Canva", rating: 5 },
+        { name: "Adobe Photoshop", rating: 4 },
+        { name: "Content Copywriting", rating: 4 },
+        { name: "Social Media Strategy", rating: 4 }
+      ],
+      intermediate: [
+        { name: "UI/UX Design (Figma)", rating: 4 },
+        { name: "Video Editing (Final Cut Pro)", rating: 4 },
+        { name: "Digital PR", rating: 3 }
+      ],
+      familiar: [
+        { name: "After Effects", rating: 2 },
+        { name: "Brand Identity Design", rating: 3 },
+        { name: "Motion Graphics", rating: 2 }
+      ]
     },
     leadership: {
-      expert: ["Public Speaking & Anchoring", "Event Management", "Team Leadership"],
-      proficient: ["Proposal & Doc Drafting", "PR Strategy", "Newsletter Design"],
-      familiar: ["Budget Management", "Stakeholder Communication"]
+      advanced: [
+        { name: "Public Speaking & Anchoring", rating: 5 },
+        { name: "Event Management", rating: 5 },
+        { name: "Team Leadership", rating: 5 }
+      ],
+      intermediate: [
+        { name: "Proposal & Doc Drafting", rating: 4 },
+        { name: "PR Strategy", rating: 4 },
+        { name: "Newsletter Design", rating: 4 }
+      ],
+      familiar: [
+        { name: "Budget Management", rating: 3 },
+        { name: "Stakeholder Communication", rating: 3 }
+      ]
     }
   };
 
@@ -322,14 +430,11 @@ function App() {
 
   // Certifications
   const certifications = [
-    { name: "IBM SkillsBuild: ML & DL, NLP & Computer Vision", issuer: "IBM" },
-    { name: "Deloitte Data Analytics Simulation", issuer: "Deloitte & Forage" },
-    { name: "Artificial Intelligence and Machine Learning", issuer: "IIT Bombay x Remarkskill" },
-    { name: "Data Science and Analytics", issuer: "IIT Hyderabad x Remarkskill" },
-    { name: "Colloquium '26 Consolation Winner II [Team Lead]", issuer: "St. Francis Institute of Technology" },
-    { name: "Samadhan Ideathon Top 5 [Team Lead]", issuer: "NSS SFIT" },
-    { name: "OutSkill 16-Hour Intensive AI Workshop", issuer: "OutSkill" },
-    { name: "Engineering Mentorship Program", issuer: "Agastya Foundation x JP Morgan Chase" }
+    { name: "Artificial Intelligence and Machine Learning", issuer: "IIT Bombay x Remarkskill", type: "AI / ML", code: "IITB", icon: <Brain size={20} /> },
+    { name: "Data Science and Analytics", issuer: "IIT Hyderabad x Remarkskill", type: "Data Science", code: "IITH", icon: <BarChart2 size={20} /> },
+    { name: "Colloquium '26 Consolation Winner II [Team Lead]", issuer: "St. Francis Institute of Technology", type: "Leadership", code: "SFIT", icon: <Users size={20} /> },
+    { name: "Samadhan Ideathon Top 5 [Team Lead]", issuer: "NSS SFIT", type: "Innovation", code: "NSS", icon: <Target size={20} /> },
+    { name: "Engineering Mentorship Program", issuer: "Agastya Foundation x JP Morgan Chase", type: "Mentorship", code: "JPMC", icon: <GraduationCap size={20} /> }
   ];
 
   // Web3Forms contact handler — REPLACE the access key with your own from https://web3forms.com
@@ -375,23 +480,33 @@ function App() {
   const getSkillsForCategory = () => {
     if (skillCategory === 'all') {
       // Merge all categories
-      const allExpert = Object.values(skills).flatMap(s => s.expert);
-      const allProficient = Object.values(skills).flatMap(s => s.proficient);
+      const allExpert = Object.values(skills).flatMap(s => s.advanced);
+      const allProficient = Object.values(skills).flatMap(s => s.intermediate);
       const allFamiliar = Object.values(skills).flatMap(s => s.familiar);
-      return { expert: allExpert, proficient: allProficient, familiar: allFamiliar };
+      return { advanced: allExpert, intermediate: allProficient, familiar: allFamiliar };
     }
-    return skills[skillCategory] || { expert: [], proficient: [], familiar: [] };
+    return skills[skillCategory] || { advanced: [], intermediate: [], familiar: [] };
   };
 
   const currentSkills = getSkillsForCategory();
+
+  const renderStars = (rating) => {
+    const filledStars = '★'.repeat(rating);
+    const emptyStars = '☆'.repeat(5 - rating);
+    return <span className="skill-stars" style={{ marginLeft: '8px', color: 'var(--color-accent)', opacity: 0.85, fontSize: '0.85rem' }}>{filledStars}{emptyStars}</span>;
+  };
 
   return (
     <div style={{ backgroundColor: 'var(--color-bg)' }}>
       <Navbar />
 
-      <header id="home" className="section container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
+      <header id="home" className="section container" style={{ minHeight: '70vh', display: 'flex', alignItems: 'center' }}>
         <div className="hero-grid">
           <div className="hero-content">
+            {/* Profile Avatar */}
+            <div className="hero-avatar-wrapper">
+              <img src="/src/assets/drishti.png" alt="Drishti Kakkar" className="hero-avatar" />
+            </div>
             <span className="hero-subtitle">
               <span style={{ display: 'inline-block', width: '8px', height: '8px', background: 'var(--color-accent)', borderRadius: '50%', marginRight: '8px', animation: 'blink 1.5s infinite' }}></span>
               SYSTEM.INIT() // AVAILABLE FOR HIRE
@@ -402,8 +517,18 @@ function App() {
                 I build where <span className="highlight">logic</span> meets <span className="highlight">storytelling</span>
               </span>
             </h1>
-            <p className="hero-description">
-              IT undergrad at SFIT Mumbai who codes AI agents by morning and directs commercial videos by evening. From Llama 3.3 pipelines to Saregama music videos — I create products that are <strong className="highlight">functionally rigorous</strong> and <strong className="highlight">visually compelling</strong>.
+            {/* Roles list */}
+            <div className="hero-roles">
+              <span>Full Stack Developer</span>
+              <span className="bullet-sep">•</span>
+              <span>AI Engineer</span>
+              <span className="bullet-sep">•</span>
+              <span>Graphic Designer</span>
+              <span className="bullet-sep">•</span>
+              <span>Assistant Director</span>
+            </div>
+            <p className="hero-description" style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', maxWidth: '650px', marginTop: '-0.25rem' }}>
+              IT undergrad at SFIT Mumbai who codes AI agents by morning and directs commercial videos by evening.
             </p>
 
             {/* Stats strip */}
@@ -420,41 +545,15 @@ function App() {
             </div>
 
             <div className="hero-buttons">
-              <a href="#why-hire" className="btn btn-primary">
-                <Zap size={16} /> Why Hire Me
-              </a>
-              <a href="#projects" className="btn btn-secondary">
+              <a href="#projects" className="btn btn-primary">
                 <Code size={16} /> View Projects
               </a>
-              <a href="#contact" className="btn btn-secondary">
-                <Send size={16} /> Get In Touch
+              <a href="mailto:drishtikakkar15@gmail.com?subject=Resume%20Request" className="btn btn-secondary">
+                <Download size={16} /> Download CV / Resume
               </a>
             </div>
           </div>
-          <div className="hero-terminal">
-            <div className="hero-visual">
-              <svg className="bg-blob" viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-                <defs>
-                  <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
-                    <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="1" />
-                    <stop offset="100%" stopColor="#7FB3FF" stopOpacity="0.9" />
-                  </linearGradient>
-                </defs>
-                <g fill="none" fillRule="evenodd">
-                  <path d="M66 198C66 115 136 52 218 48c82-4 178 28 237 86 59 58 97 167 53 221-44 54-147 56-250 33-103-23-198-85-198-190z" fill="url(#g1)" />
-                  <g transform="translate(120 80)" opacity="0.18">
-                    <circle cx="220" cy="60" r="6" fill="#FFFFFF" />
-                    <circle cx="40" cy="150" r="4" fill="#FFFFFF" />
-                    <rect x="120" y="40" width="80" height="2" rx="1" fill="#FFFFFF" />
-                  </g>
-                </g>
-              </svg>
 
-              <div className="terminal-wrap">
-                <Terminal />
-              </div>
-            </div>
-          </div>
         </div>
       </header>
 
@@ -475,7 +574,11 @@ function App() {
                   <span className="vp-subtitle">{vp.subtitle}</span>
                 </div>
               </div>
-              <p className="vp-desc">{vp.desc}</p>
+              <ul className="vp-bullets" style={{ fontSize: '0.88rem', color: 'var(--color-text-secondary)', paddingLeft: '1.1rem', listStyleType: 'disc', display: 'flex', flexDirection: 'column', gap: '0.4rem', margin: '0.75rem 0 1rem 0', flexGrow: 1 }}>
+                {vp.bullets.map((bullet, idx) => (
+                  <li key={idx} style={{ lineHeight: '1.4' }}>{bullet}</li>
+                ))}
+              </ul>
               <div className="vp-tags">
                 {vp.tags.map((tag, j) => (
                   <span className="vp-tag" key={j}>{tag}</span>
@@ -494,14 +597,28 @@ function App() {
         <div className="about-grid">
           <div className="about-text">
             <p>
-              I am a passionate IT undergraduate at <strong className="highlight">St. Francis Institute of Technology</strong> with a CGPA of <strong className="highlight">8.6</strong>. Most candidates are either purely technical or purely creative — I operate comfortably in both worlds.
+              I am a B.Tech IT undergraduate at St. Francis Institute of Technology with an average CGPA of <strong className="highlight">8.6</strong>. Most candidates are either purely technical or purely creative — I operate comfortably in both worlds.
             </p>
             <p>
-              My engineering stack revolves around <strong className="highlight">Python, React, Node.js, and Machine Learning</strong> — building data pipelines, engineering prompts for LLMs like Llama 3.3 & Groq, and shipping full-stack applications. I don't just follow tutorials; I build production-grade tools that solve real problems.
+              My engineering stack revolves around Python, React, Node.js, and Machine Learning — building data pipelines, integrating LLMs, and shipping full-stack applications. I focus on building <strong className="highlight">production-grade applications</strong> that solve real problems.
             </p>
-            <p>
-              Outside the compiler, I work as a <strong className="highlight">Graphic Designer at Zoetics</strong>, <strong className="highlight">Assistant Director on Saregama productions</strong>, and <strong className="highlight">Copywriter at EvolvEd</strong>. This duality means I can build developer interfaces with a designer's eye, communicate complex technical narratives through public speaking, and lead cross-functional teams — a skill set most engineers develop 5 years into their career.
+            <p style={{ marginBottom: '0.75rem' }}>
+              Outside the compiler, I balance several professional creative and leadership roles:
             </p>
+            <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', paddingLeft: '0.2rem', marginBottom: '1.25rem', listStyle: 'none' }}>
+              <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ color: 'var(--color-accent)' }}>✔</span> <span><strong>Graphic Designer</strong> at Zoetics</span>
+              </li>
+              <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ color: 'var(--color-accent)' }}>✔</span> <span><strong>Assistant Director</strong> on Saregama productions</span>
+              </li>
+              <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ color: 'var(--color-accent)' }}>✔</span> <span><strong>Copywriter</strong> at EvolvEd</span>
+              </li>
+              <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ color: 'var(--color-accent)' }}>✔</span> <span><strong>Technical Leader</strong> at CSI Student Chapter</span>
+              </li>
+            </ul>
 
             {/* Education highlight card */}
             <div className="education-highlight">
@@ -567,33 +684,39 @@ function App() {
         </div>
 
         <div className="skills-levels">
-          {/* Expert Level */}
-          {currentSkills.expert.length > 0 && (
+          {/* Advanced Level */}
+          {currentSkills.advanced.length > 0 && (
             <div className="skill-level-group">
               <div className="skill-level-label">
                 <span className="skill-level-dot expert"></span>
-                <span>Expert</span>
+                <span>Advanced</span>
                 <span className="skill-level-line"></span>
               </div>
               <div className="skill-badges">
-                {currentSkills.expert.map((skill, i) => (
-                  <span key={i} className="skill-badge expert">{skill}</span>
+                {currentSkills.advanced.map((skill, i) => (
+                  <span key={i} className="skill-badge expert" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    <span>{skill.name}</span>
+                    {renderStars(skill.rating)}
+                  </span>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Proficient Level */}
-          {currentSkills.proficient.length > 0 && (
+          {/* Intermediate Level */}
+          {currentSkills.intermediate.length > 0 && (
             <div className="skill-level-group">
               <div className="skill-level-label">
                 <span className="skill-level-dot proficient"></span>
-                <span>Proficient</span>
+                <span>Intermediate</span>
                 <span className="skill-level-line"></span>
               </div>
               <div className="skill-badges">
-                {currentSkills.proficient.map((skill, i) => (
-                  <span key={i} className="skill-badge proficient">{skill}</span>
+                {currentSkills.intermediate.map((skill, i) => (
+                  <span key={i} className="skill-badge proficient" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    <span>{skill.name}</span>
+                    {renderStars(skill.rating)}
+                  </span>
                 ))}
               </div>
             </div>
@@ -604,12 +727,15 @@ function App() {
             <div className="skill-level-group">
               <div className="skill-level-label">
                 <span className="skill-level-dot familiar"></span>
-                <span>Familiar</span>
+                <span>Learning</span>
                 <span className="skill-level-line"></span>
               </div>
               <div className="skill-badges">
                 {currentSkills.familiar.map((skill, i) => (
-                  <span key={i} className="skill-badge familiar">{skill}</span>
+                  <span key={i} className="skill-badge familiar" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    <span>{skill.name}</span>
+                    {renderStars(skill.rating)}
+                  </span>
                 ))}
               </div>
             </div>
@@ -678,8 +804,16 @@ function App() {
               {experiences[activeExpType][selectedExpIdx].desc}
             </p>
 
+            {experiences[activeExpType][selectedExpIdx].achievements && (
+              <ul className="exp-achievements">
+                {experiences[activeExpType][selectedExpIdx].achievements.map((ach, aIdx) => (
+                  <li key={aIdx}>{ach}</li>
+                ))}
+              </ul>
+            )}
+
             {experiences[activeExpType][selectedExpIdx].impact && (
-              <div className="timeline-impact">
+              <div className="timeline-impact" style={{ marginTop: '0.75rem' }}>
                 <TrendingUp size={15} />
                 <span>{experiences[activeExpType][selectedExpIdx].impact}</span>
               </div>
@@ -719,15 +853,12 @@ function App() {
         <div className="projects-grid">
           {filteredProjects.map((project, index) => (
             <article className="project-card" key={index}>
-              <div className="project-image-placeholder">
-                <div className="project-image-icon">
-                  {project.icon}
-                </div>
-                <div className="project-image-overlay">
-                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>
-                    <Github size={16} /> View Code
-                  </a>
-                </div>
+              <div className={`project-media ${project.image ? 'has-image' : ''}`} style={project.image ? { backgroundImage: `url(${project.image})` } : {}}>
+                {!project.image && (
+                  <div className="project-image-icon">
+                    {project.icon}
+                  </div>
+                )}
               </div>
               <div className="project-body">
                 <h3 className="project-title">{project.title}</h3>
@@ -738,10 +869,23 @@ function App() {
                   </div>
                 )}
                 <p className="project-description">{project.desc}</p>
-                <div className="project-tags">
+                <div className="project-tags" style={{ marginBottom: '0.5rem' }}>
                   {project.tech.map((tech, tIdx) => (
                     <span key={tIdx} className="project-tag">{tech}</span>
                   ))}
+                </div>
+                
+                {/* Project Links footer */}
+                <div className="project-links" style={{ display: 'flex', gap: '0.4rem', marginTop: 'auto', paddingTop: '0.75rem', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="project-link-btn primary" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', fontSize: '0.72rem', fontFamily: 'var(--font-mono)', padding: '0.35rem 0.55rem', borderRadius: '4px', background: 'rgba(59, 130, 246, 0.08)', border: '1px solid rgba(59, 130, 246, 0.25)', color: 'var(--color-accent)', transition: 'var(--transition-fast)', cursor: 'pointer' }}>
+                    <Github size={13} /> GitHub
+                  </a>
+                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="project-link-btn" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', fontSize: '0.72rem', fontFamily: 'var(--font-mono)', padding: '0.35rem 0.55rem', borderRadius: '4px', background: 'transparent', border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)', transition: 'var(--transition-fast)', cursor: 'pointer' }}>
+                    <ExternalLink size={13} /> Live
+                  </a>
+                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="project-link-btn" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', fontSize: '0.72rem', fontFamily: 'var(--font-mono)', padding: '0.35rem 0.55rem', borderRadius: '4px', background: 'transparent', border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)', transition: 'var(--transition-fast)', cursor: 'pointer' }}>
+                    <BookOpen size={13} /> Case Study
+                  </a>
                 </div>
               </div>
             </article>
@@ -768,10 +912,8 @@ function App() {
               onClick={() => work.image && setLightboxImage(work)}
             >
               {work.image ? (
-                <div
-                  className="creative-card-visual has-image"
-                  style={{ backgroundImage: `url(${work.image})` }}
-                >
+                <div className="creative-card-visual has-image">
+                  <img src={work.image} alt={work.title} className="creative-card-image" />
                   <div className="creative-card-type-badge">{work.type}</div>
                   <div className="project-image-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <span className="btn btn-secondary btn-sm" style={{ pointerEvents: 'none' }}>
@@ -818,10 +960,15 @@ function App() {
         <div className="certifications-list">
           {certifications.map((cert, index) => (
             <div className="cert-card" key={index}>
-              <Award className="cert-icon" size={28} />
+              <div className="cert-badge-logo">{cert.code}</div>
+              <div className="cert-icon-wrapper">{cert.icon}</div>
               <div className="cert-info">
                 <span className="cert-name">{cert.name}</span>
                 <span className="cert-issuer">{cert.issuer}</span>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.35rem', flexWrap: 'wrap' }}>
+                  <span className="cert-pill">{cert.type}</span>
+                  <span className="cert-verified-pill">✓ Verified</span>
+                </div>
               </div>
             </div>
           ))}
@@ -837,47 +984,45 @@ function App() {
         </h2>
         <div className="contact-grid">
           <div className="contact-info">
-            <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Let's collaborate!</h3>
-            <p>
-              I am actively seeking <strong className="highlight">internships</strong>, <strong className="highlight">freelance projects</strong>, and <strong className="highlight">creative collaborations</strong>. Whether it's building an AI agent, designing a product interface, or directing a media project — I bring the full stack.
+            <h3 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>Let's collaborate!</h3>
+            <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', lineHeight: '1.5', marginBottom: '1.5rem' }}>
+              I’m open to internships, freelance product roles, and creative tech collaborations that sit at the intersection of code and digital design.
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginTop: '1rem' }}>
-              <div className="contact-method">
-                <div className="contact-icon">
-                  <Mail size={20} />
-                </div>
-                <div className="contact-details">
-                  <h4>Email</h4>
-                  <a href="mailto:drishtikakkar15@gmail.com">drishtikakkar15@gmail.com</a>
-                </div>
-              </div>
-              <div className="contact-method">
-                <div className="contact-icon">
-                  <Phone size={20} />
-                </div>
-                <div className="contact-details">
-                  <h4>Phone</h4>
-                  <a href="tel:+918355844274">+91 83558 44274</a>
-                </div>
-              </div>
-              <div className="contact-method">
-                <div className="contact-icon">
-                  <MapPin size={20} />
-                </div>
-                <div className="contact-details">
+            
+            <div className="contact-methods-grid">
+              <div className="contact-method-card">
+                <MapPin size={20} style={{ color: 'var(--color-accent)' }} />
+                <div>
                   <h4>Location</h4>
                   <p>Mumbai, Maharashtra, India</p>
                 </div>
               </div>
-              <div className="contact-method">
-                <div className="contact-icon">
-                  <Linkedin size={20} />
-                </div>
-                <div className="contact-details">
-                  <h4>LinkedIn</h4>
-                  <a href="https://linkedin.com/in/drishti-kakkar-13a1992b3" target="_blank" rel="noopener noreferrer">linkedin.com/in/drishti-kakkar</a>
+              
+              <div className="contact-method-card">
+                <Calendar size={20} style={{ color: 'var(--color-accent)' }} />
+                <div>
+                  <h4>Availability</h4>
+                  <p>Open for full-time internships & freelance projects</p>
                 </div>
               </div>
+            </div>
+
+            <div className="contact-links-panel">
+              <a href="https://linkedin.com/in/drishti-kakkar-13a1992b3" target="_blank" rel="noopener noreferrer" className="contact-link-item">
+                <Linkedin size={18} /> LinkedIn
+              </a>
+              <a href="https://github.com/drishti-kakkar" target="_blank" rel="noopener noreferrer" className="contact-link-item">
+                <Github size={18} /> GitHub
+              </a>
+              <a href="mailto:drishtikakkar15@gmail.com" className="contact-link-item">
+                <Mail size={18} /> Email: drishtikakkar15@gmail.com
+              </a>
+              <a href="tel:+918355844274" className="contact-link-item">
+                <Phone size={18} /> Call: +91 83558 44274
+              </a>
+              <a href="mailto:drishtikakkar15@gmail.com?subject=Resume%20Request" className="contact-link-item resume-btn">
+                <Download size={18} /> Request Resume / CV
+              </a>
             </div>
           </div>
 
