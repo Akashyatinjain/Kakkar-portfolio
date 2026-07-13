@@ -1,26 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Terminal from './components/Terminal';
-import { 
-  Github, 
-  Linkedin, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Award, 
-  BookOpen, 
-  Briefcase, 
-  Code, 
-  Brain, 
-  Video, 
-  Users, 
-  CheckCircle2, 
-  Send, 
-  ExternalLink, 
-  Shield, 
-  Compass, 
-  Lock, 
-  Cpu, 
+import {
+  Github,
+  Linkedin,
+  Mail,
+  Phone,
+  MapPin,
+  Award,
+  BookOpen,
+  Briefcase,
+  Code,
+  Brain,
+  Video,
+  Users,
+  CheckCircle2,
+  Send,
+  ExternalLink,
+  Shield,
+  Compass,
+  Lock,
+  Cpu,
   BarChart2,
   Terminal as TerminalIcon,
   Sparkles,
@@ -60,9 +60,9 @@ function useInView(options) {
 function AnimatedSection({ children, className = '', id, style }) {
   const [ref, isInView] = useInView();
   return (
-    <section 
-      id={id} 
-      ref={ref} 
+    <section
+      id={id}
+      ref={ref}
       className={`section container ${className} ${isInView ? 'animate-in' : 'animate-hidden'}`}
       style={style}
     >
@@ -371,11 +371,11 @@ function App() {
     }
   };
 
-  const filteredExperiences = experiences.filter(exp => 
+  const filteredExperiences = experiences.filter(exp =>
     expCategory === 'all' || exp.category === expCategory
   );
 
-  const filteredProjects = projects.filter(project => 
+  const filteredProjects = projects.filter(project =>
     projectCategory === 'all' || project.category === projectCategory
   );
 
@@ -397,9 +397,6 @@ function App() {
     <div style={{ backgroundColor: 'var(--color-bg)' }}>
       <Navbar />
 
-      {/* ═══════════════════════════════════════ */}
-      {/* HERO SECTION                           */}
-      {/* ═══════════════════════════════════════ */}
       <header id="home" className="section container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
         <div className="hero-grid">
           <div className="hero-content">
@@ -452,7 +449,7 @@ function App() {
                   </linearGradient>
                 </defs>
                 <g fill="none" fillRule="evenodd">
-                  <path d="M66 198C66 115 136 52 218 48c82-4 178 28 237 86 59 58 97 167 53 221-44 54-147 56-250 33-103-23-198-85-198-190z" fill="url(#g1)"/>
+                  <path d="M66 198C66 115 136 52 218 48c82-4 178 28 237 86 59 58 97 167 53 221-44 54-147 56-250 33-103-23-198-85-198-190z" fill="url(#g1)" />
                   <g transform="translate(120 80)" opacity="0.18">
                     <circle cx="220" cy="60" r="6" fill="#FFFFFF" />
                     <circle cx="40" cy="150" r="4" fill="#FFFFFF" />
@@ -469,9 +466,6 @@ function App() {
         </div>
       </header>
 
-      {/* ═══════════════════════════════════════ */}
-      {/* WHY HIRE ME — Recruiter Value Props     */}
-      {/* ═══════════════════════════════════════ */}
       <AnimatedSection id="why-hire">
         <h2>
           <span className="highlight">00.</span> Why Hire Me
@@ -500,9 +494,7 @@ function App() {
         </div>
       </AnimatedSection>
 
-      {/* ═══════════════════════════════════════ */}
-      {/* ABOUT ME                               */}
-      {/* ═══════════════════════════════════════ */}
+
       <AnimatedSection id="about">
         <h2>
           <span className="highlight">01.</span> About Me
@@ -640,7 +632,7 @@ function App() {
         <h2>
           <span className="highlight">03.</span> Experience & Leadership
         </h2>
-        
+
         <div className="filters-container">
           <div className="filter-group">
             {['all', 'tech', 'creative', 'leadership'].map(cat => (
