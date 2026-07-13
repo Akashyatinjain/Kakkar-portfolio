@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Terminal as TerminalIcon } from 'lucide-react';
 
+const navItems = [
+  { id: 'home', label: 'home' },
+  { id: 'why-hire', label: 'why_hire' },
+  { id: 'about', label: 'about' },
+  { id: 'skills', label: 'skills' },
+  { id: 'experience', label: 'experience' },
+  { id: 'projects', label: 'projects' },
+  { id: 'creative', label: 'creative' },
+  { id: 'certifications', label: 'certs' },
+  { id: 'contact', label: 'contact' }
+];
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
-
-  const navItems = [
-    { id: 'home', label: 'home' },
-    { id: 'why-hire', label: 'why_hire' },
-    { id: 'about', label: 'about' },
-    { id: 'skills', label: 'skills' },
-    { id: 'experience', label: 'experience' },
-    { id: 'projects', label: 'projects' },
-    { id: 'creative', label: 'creative' },
-    { id: 'certifications', label: 'certs' },
-    { id: 'contact', label: 'contact' }
-  ];
 
   useEffect(() => {
     const handleScroll = () => {

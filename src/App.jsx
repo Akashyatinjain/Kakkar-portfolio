@@ -8,21 +8,17 @@ import {
   Phone,
   MapPin,
   Award,
-  BookOpen,
   Briefcase,
   Code,
   Brain,
   Video,
   Users,
-  CheckCircle2,
   Send,
-  ExternalLink,
   Shield,
   Compass,
   Lock,
   Cpu,
   BarChart2,
-  Terminal as TerminalIcon,
   Sparkles,
   GraduationCap,
   Zap,
@@ -30,8 +26,6 @@ import {
   Palette,
   TrendingUp,
   Star,
-  ArrowRight,
-  ChevronRight,
   X,
   Image,
   Loader2,
@@ -52,6 +46,7 @@ function useInView(options) {
     }, { threshold: 0.1, ...options });
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return [ref, isInView];
 }
@@ -72,12 +67,13 @@ function AnimatedSection({ children, className = '', id, style }) {
 }
 
 function App() {
-  const [skillCategory, setSkillCategory] = useState('all');
-  const [expCategory, setExpCategory] = useState('all');
+  const [skillCategory, setSkillCategory] = useState('tech');
+  const [activeExpType, setActiveExpType] = useState('work');
+  const [selectedExpIdx, setSelectedExpIdx] = useState(0);
   const [projectCategory, setProjectCategory] = useState('all');
   const [contactStatus, setContactStatus] = useState('');
   const [contactSubmitting, setContactSubmitting] = useState(false);
-  const [galleryOpen, setGalleryOpen] = useState(null);
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   // Stats for the hero counter strip
   const stats = [
@@ -119,90 +115,85 @@ function App() {
     }
   ];
 
-  // Experience Data — enhanced with impact highlights
-  const experiences = [
-    {
-      title: "Vice Chairperson",
-      company: "CSI SFIT",
-      period: "Jun 2026 - Present",
-      category: "leadership",
-      tags: ["Technical Association", "Management", "Leadership"],
-      desc: "Elected to lead CSI Student Chapter — coordinating tech workshops, hackathons, and overseeing administrative/operational activities of the entire branch.",
-      impact: "Managing 50+ member team & coordinating college-wide tech events"
-    },
-    {
-      title: "NSS Head",
-      company: "NSS SFIT",
-      period: "Jun 2026 - Present",
-      category: "leadership",
-      tags: ["Social Welfare", "Leadership", "Event Management"],
-      desc: "Directing college community service projects, blood donation campaigns, tree plantation drives, and organizing welfare events across Mumbai.",
-      impact: "Directing social welfare campaigns impacting 200+ participants"
-    },
-    {
-      title: "Copywriter Intern",
-      company: "EvolvEd",
-      period: "May 2026 - Present",
-      category: "creative",
-      tags: ["Content Writing", "PR", "Marketing", "HTML Emails"],
-      desc: "Creating engaging content for official channels, drafting PR newsletters, LinkedIn updates, and custom HTML email marketing campaigns that drive user engagement.",
-      impact: "Authoring weekly PR newsletters reaching 500+ subscribers"
-    },
-    {
-      title: "Graphic Designer",
-      company: "Zoetics (B2B Business)",
-      period: "May 2025 - Present",
-      category: "creative",
-      tags: ["Figma", "Photoshop", "Branding", "B2B Design"],
-      desc: "Designing B2B product catalogs, digital creatives, brand identity visuals, and holiday greeting assets for corporate clients — bridging design and business.",
-      impact: "Delivering 30+ branded assets for corporate B2B campaigns"
-    },
-    {
-      title: "Public Relations Executive",
-      company: "Google Developers Group (GDG) SFIT",
-      period: "Jan 2026 - May 2026",
-      category: "leadership",
-      tags: ["Public Relations", "Content Writing", "Event PR", "Google"],
-      desc: "Managed promotional copy, scriptwriting, and anchoring for the HackX2.0 national-level hackathon — part of the global Google Developer ecosystem.",
-      impact: "Anchored HackX2.0 national hackathon reaching 300+ participants"
-    },
-    {
-      title: "Assistant Director",
-      company: "Final Cut Studio & Production",
-      period: "Sep 2025 - Oct 2025",
-      category: "creative",
-      tags: ["Direction", "Production", "Saregama Music", "Film"],
-      desc: "Served as Assistant Director for a high-profile Saregama music video. Orchestrated shoot logistics, script breakdowns, scene scheduling, and directed on-set talent.",
-      impact: "AD on commercial Saregama music video — real production credits"
-    },
-    {
-      title: "Joint PR & Social Media Head",
-      company: "SFIT Alumni Association",
-      period: "Jul 2025 - Jun 2026",
-      category: "leadership",
-      tags: ["Alumni Engagement", "Social Media", "Webinars", "Newsletters"],
-      desc: "Managed alumni outreach campaigns, conducted interactive alumni webinars on Slido, and designed the monthly newsletter for 1000+ alumni network.",
-      impact: "Reaching 1000+ alumni through monthly digital newsletters"
-    },
-    {
-      title: "Data Science & Analytics Intern",
-      company: "Remarkskill x IIT Hyderabad",
-      period: "Jun 2025 - Jul 2025",
-      category: "tech",
-      tags: ["Python", "Machine Learning", "Data Visualization", "IIT"],
-      desc: "Gained hands-on training with exploratory data analysis, data pre-processing, and building regression models on real-world datasets under IIT Hyderabad mentorship.",
-      impact: "Built 3 ML models on production-grade IIT datasets"
-    },
-    {
-      title: "Actor & Assistant Director Intern",
-      company: "Momomoto Studios",
-      period: "Apr 2024 - Jul 2024",
-      category: "creative",
-      tags: ["Acting", "Scripting", "Direction", "TV Commercial"],
-      desc: "Contributed to script development, scene execution, and worked as an actor on a television commercial project — real-world media production experience.",
-      impact: "On-screen acting + direction in TV commercial production"
-    }
-  ];
+  // Experience Data — structured into Work and Leadership for interactive tabs
+  const experiences = {
+    work: [
+      {
+        title: "Copywriter Intern",
+        company: "EvolvEd",
+        period: "May 2026 - Present",
+        tags: ["Content Writing", "PR", "Marketing", "HTML Emails"],
+        desc: "Creating engaging content for official channels, drafting PR newsletters, LinkedIn updates, and custom HTML email marketing campaigns that drive user engagement.",
+        impact: "Authoring weekly PR newsletters reaching 500+ subscribers"
+      },
+      {
+        title: "Graphic Designer",
+        company: "Zoetics (B2B Business)",
+        period: "May 2025 - Present",
+        tags: ["Figma", "Photoshop", "Branding", "B2B Design"],
+        desc: "Designing B2B product catalogs, digital creatives, brand identity visuals, and holiday greeting assets for corporate clients — bridging design and business.",
+        impact: "Delivering 30+ branded assets for corporate B2B campaigns"
+      },
+      {
+        title: "Assistant Director",
+        company: "Final Cut Studio & Production",
+        period: "Sep 2025 - Oct 2025",
+        tags: ["Direction", "Production", "Saregama Music", "Film"],
+        desc: "Served as Assistant Director for a high-profile Saregama music video. Orchestrated shoot logistics, script breakdowns, scene scheduling, and directed on-set talent.",
+        impact: "AD on commercial Saregama music video — real production credits"
+      },
+      {
+        title: "Data Science & Analytics Intern",
+        company: "Remarkskill x IIT Hyderabad",
+        period: "Jun 2025 - Jul 2025",
+        tags: ["Python", "Machine Learning", "Data Visualization", "IIT"],
+        desc: "Gained hands-on training with exploratory data analysis, data pre-processing, and building regression models on real-world datasets under IIT Hyderabad mentorship.",
+        impact: "Built 3 ML models on production-grade IIT datasets"
+      },
+      {
+        title: "Actor & Assistant Director Intern",
+        company: "Momomoto Studios",
+        period: "Apr 2024 - Jul 2024",
+        tags: ["Acting", "Scripting", "Direction", "TV Commercial"],
+        desc: "Contributed to script development, scene execution, and worked as an actor on a television commercial project — real-world media production experience.",
+        impact: "On-screen acting + direction in TV commercial production"
+      }
+    ],
+    leadership: [
+      {
+        title: "Vice Chairperson",
+        company: "CSI SFIT",
+        period: "Jun 2026 - Present",
+        tags: ["Technical Association", "Management", "Leadership"],
+        desc: "Elected to lead CSI Student Chapter — coordinating tech workshops, hackathons, and overseeing administrative/operational activities of the entire branch.",
+        impact: "Managing 50+ member team & coordinating college-wide tech events"
+      },
+      {
+        title: "NSS Head",
+        company: "NSS SFIT",
+        period: "Jun 2026 - Present",
+        tags: ["Social Welfare", "Leadership", "Event Management"],
+        desc: "Directing college community service projects, blood donation campaigns, tree plantation drives, and organizing welfare events across Mumbai.",
+        impact: "Directing social welfare campaigns impacting 200+ participants"
+      },
+      {
+        title: "Public Relations Executive",
+        company: "Google Developers Group (GDG) SFIT",
+        period: "Jan 2026 - May 2026",
+        tags: ["Public Relations", "Content Writing", "Event PR", "Google"],
+        desc: "Managed promotional copy, scriptwriting, and anchoring for the HackX2.0 national-level hackathon — part of the global Google Developer ecosystem.",
+        impact: "Anchored HackX2.0 national hackathon reaching 300+ participants"
+      },
+      {
+        title: "Joint PR & Social Media Head",
+        company: "SFIT Alumni Association",
+        period: "Jul 2025 - Jun 2026",
+        tags: ["Alumni Engagement", "Social Media", "Webinars", "Newsletters"],
+        desc: "Managed alumni outreach campaigns, conducted interactive alumni webinars on Slido, and designed the monthly newsletter for 1000+ alumni network.",
+        impact: "Reaching 1000+ alumni through monthly digital newsletters"
+      }
+    ]
+  };
 
   // Projects Data — with real GitHub repo links
   const projects = [
@@ -286,25 +277,28 @@ function App() {
     }
   };
 
-  // Creative Showcase Data
+  // Creative Showcase Data — updated with visual mockups
   const creativeWorks = [
     {
       title: "Saregama Music Video — AD",
       type: "Film & Direction",
       desc: "Served as Assistant Director on a Saregama-label music video. Managed shoot logistics, scene breakdowns, talent direction, and multi-location scheduling.",
-      tags: ["Direction", "Saregama", "Production"]
+      tags: ["Direction", "Saregama", "Production"],
+      image: "/src/assets/saregama_video.png"
     },
     {
       title: "Zoetics B2B Brand Catalog",
       type: "Graphic Design",
       desc: "Designed comprehensive product catalogs, digital creatives, and branded holiday assets for corporate B2B clients. 30+ branded deliverables.",
-      tags: ["Figma", "Photoshop", "B2B Branding"]
+      tags: ["Figma", "Photoshop", "B2B Branding"],
+      image: "/src/assets/zoetics_catalog.png"
     },
     {
-      title: "Momomoto Studios — TV Commercial",
-      type: "Acting & Direction",
-      desc: "On-screen actor and assistant director for a television commercial. Contributed to script development, blocking, and scene execution.",
-      tags: ["Acting", "TV Commercial", "Script Dev"]
+      title: "SFIT Alumni Newsletter Design",
+      type: "Content & Design",
+      desc: "Designed and authored monthly digital newsletters for 1000+ alumni network. Combined Canva visuals with copywriting for alumni engagement.",
+      tags: ["Newsletter", "Canva", "1000+ Reach"],
+      image: "/src/assets/alumni_newsletter.png"
     },
     {
       title: "HackX2.0 National Hackathon — Anchor",
@@ -313,16 +307,16 @@ function App() {
       tags: ["Anchoring", "300+ Audience", "GDG"]
     },
     {
-      title: "SFIT Alumni Newsletter Design",
-      type: "Content & Design",
-      desc: "Designed and authored monthly digital newsletters for 1000+ alumni network. Combined Canva visuals with copywriting for alumni engagement.",
-      tags: ["Newsletter", "Canva", "1000+ Reach"]
-    },
-    {
       title: "EvolvEd Email Campaigns",
       type: "Copywriting & Marketing",
       desc: "Created HTML email marketing campaigns, PR newsletters, and LinkedIn content for EvolvEd's official channels driving user engagement.",
       tags: ["HTML Emails", "PR", "Content Marketing"]
+    },
+    {
+      title: "Momomoto Studios — TV Commercial",
+      type: "Acting & Direction",
+      desc: "On-screen actor and assistant director for a television commercial. Contributed to script development, blocking, and scene execution.",
+      tags: ["Acting", "TV Commercial", "Script Dev"]
     }
   ];
 
@@ -364,16 +358,14 @@ function App() {
       } else {
         setContactStatus('error');
       }
-    } catch (err) {
+    } catch {
       setContactStatus('error');
     } finally {
       setContactSubmitting(false);
     }
   };
 
-  const filteredExperiences = experiences.filter(exp =>
-    expCategory === 'all' || exp.category === expCategory
-  );
+
 
   const filteredProjects = projects.filter(project =>
     projectCategory === 'all' || project.category === projectCategory
@@ -633,49 +625,72 @@ function App() {
           <span className="highlight">03.</span> Experience & Leadership
         </h2>
 
-        <div className="filters-container">
-          <div className="filter-group">
-            {['all', 'tech', 'creative', 'leadership'].map(cat => (
+        {/* Tab Selector buttons */}
+        <div className="exp-selector-tabs">
+          <button
+            onClick={() => { setActiveExpType('work'); setSelectedExpIdx(0); }}
+            className={`exp-type-btn ${activeExpType === 'work' ? 'active' : ''}`}
+          >
+            <Briefcase size={18} />
+            <span>Professional Experience</span>
+          </button>
+          <button
+            onClick={() => { setActiveExpType('leadership'); setSelectedExpIdx(0); }}
+            className={`exp-type-btn ${activeExpType === 'leadership' ? 'active' : ''}`}
+          >
+            <Users size={18} />
+            <span>Leadership & Community</span>
+          </button>
+        </div>
+
+        {/* Dashboard layout */}
+        <div className="exp-dashboard">
+          {/* Left company names pane */}
+          <div className="exp-left-pane">
+            {experiences[activeExpType].map((exp, idx) => (
               <button
-                key={cat}
-                onClick={() => setExpCategory(cat)}
-                className={`filter-btn ${expCategory === cat ? 'active' : ''}`}
+                key={idx}
+                onClick={() => setSelectedExpIdx(idx)}
+                className={`exp-company-tab ${selectedExpIdx === idx ? 'active' : ''}`}
               >
-                {cat === 'all' ? 'All Roles' : cat === 'tech' ? 'Engineering' : cat === 'creative' ? 'Creative & Media' : 'Leadership & PR'}
+                {exp.company}
               </button>
             ))}
           </div>
-        </div>
 
-        <div className="timeline">
-          {filteredExperiences.map((exp, index) => (
-            <div className="timeline-item" key={index}>
-              <div className="timeline-dot"></div>
-              <div className="timeline-card">
-                <div className="timeline-header">
-                  <div>
-                    <h3 className="timeline-title">{exp.title}</h3>
-                    <div className="timeline-company">
-                      {exp.company}
-                    </div>
-                  </div>
-                  <span className="timeline-period">{exp.period}</span>
-                </div>
-                <p className="timeline-description">{exp.desc}</p>
-                {exp.impact && (
-                  <div className="timeline-impact">
-                    <TrendingUp size={14} />
-                    <span>{exp.impact}</span>
-                  </div>
-                )}
-                <div className="timeline-tags">
-                  {exp.tags.map((tag, tIdx) => (
-                    <span key={tIdx} className="timeline-tag">{tag}</span>
-                  ))}
+          {/* Right details pane */}
+          <div className="exp-right-pane">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 700 }}>
+                  {experiences[activeExpType][selectedExpIdx].title}
+                </h3>
+                <div style={{ color: 'var(--color-accent)', fontWeight: 600, marginTop: '0.25rem', fontFamily: 'var(--font-mono)' }}>
+                  @ {experiences[activeExpType][selectedExpIdx].company}
                 </div>
               </div>
+              <span className="timeline-period" style={{ marginTop: '0.25rem' }}>
+                {experiences[activeExpType][selectedExpIdx].period}
+              </span>
             </div>
-          ))}
+            
+            <p style={{ fontSize: '1rem', lineHeight: '1.6', margin: '0.5rem 0 0.25rem 0' }}>
+              {experiences[activeExpType][selectedExpIdx].desc}
+            </p>
+
+            {experiences[activeExpType][selectedExpIdx].impact && (
+              <div className="timeline-impact">
+                <TrendingUp size={15} />
+                <span>{experiences[activeExpType][selectedExpIdx].impact}</span>
+              </div>
+            )}
+
+            <div className="timeline-tags" style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
+              {experiences[activeExpType][selectedExpIdx].tags.map((tag, tIdx) => (
+                <span key={tIdx} className="timeline-tag">{tag}</span>
+              ))}
+            </div>
+          </div>
         </div>
       </AnimatedSection>
 
@@ -746,13 +761,35 @@ function App() {
         </p>
         <div className="creative-grid">
           {creativeWorks.map((work, index) => (
-            <div className="creative-card" key={index}>
-              <div className="creative-card-visual">
-                <div className="creative-card-type-badge">{work.type}</div>
-                <Palette size={32} className="creative-card-icon" />
-              </div>
+            <div
+              className="creative-card"
+              key={index}
+              style={{ cursor: work.image ? 'pointer' : 'default' }}
+              onClick={() => work.image && setLightboxImage(work)}
+            >
+              {work.image ? (
+                <div
+                  className="creative-card-visual has-image"
+                  style={{ backgroundImage: `url(${work.image})` }}
+                >
+                  <div className="creative-card-type-badge">{work.type}</div>
+                  <div className="project-image-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span className="btn btn-secondary btn-sm" style={{ pointerEvents: 'none' }}>
+                      <Sparkles size={16} /> View Showcase
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="creative-card-visual">
+                  <div className="creative-card-type-badge">{work.type}</div>
+                  <Palette size={32} className="creative-card-icon" />
+                </div>
+              )}
               <div className="creative-card-body">
-                <h3>{work.title}</h3>
+                <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  {work.title}
+                  {work.image && <Sparkles size={14} className="highlight" style={{ animation: 'blink 2s infinite' }} />}
+                </h3>
                 <p>{work.desc}</p>
                 <div className="creative-card-tags">
                   {work.tags.map((tag, j) => (
@@ -901,12 +938,32 @@ function App() {
           <p className="footer-text">
             Designed & Built by Drishti Kakkar. Powered by React.
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', opacity: 0.5 }}>
-            <Sparkles size={12} className="highlight" />
-            <span>Emerald Developer Theme</span>
-          </div>
         </div>
       </footer>
+
+      {/* Lightbox Modal */}
+      {lightboxImage && (
+        <div className="lightbox" onClick={() => setLightboxImage(null)}>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <button className="lightbox-close" onClick={() => setLightboxImage(null)}>
+              <X size={24} />
+            </button>
+            <img src={lightboxImage.image} alt={lightboxImage.title} className="lightbox-img" />
+            <div className="lightbox-details">
+              <span className="lightbox-badge">{lightboxImage.type}</span>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginTop: '0.5rem' }}>{lightboxImage.title}</h3>
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                {lightboxImage.desc}
+              </p>
+              <div className="creative-card-tags" style={{ marginTop: '0.5rem' }}>
+                {lightboxImage.tags.map((tag, j) => (
+                  <span key={j} className="creative-tag">{tag}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
