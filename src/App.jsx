@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
+import MemeCorner from './components/MemeCorner';
 
 // Image asset imports for Vite compilation
 import drishtiImg from './assets/drishti.png';
@@ -78,6 +79,41 @@ function AnimatedSection({ children, className = '', id, style }) {
   );
 }
 
+/* Animated Counter component */
+function AnimatedCounter({ value, duration = 1500, trigger = false }) {
+  const [count, setCount] = useState(() => {
+    const numericMatch = value.match(/[\d.]+/);
+    if (!numericMatch) return value;
+    return value.replace(numericMatch[0], '0');
+  });
+
+  useEffect(() => {
+    if (!trigger) return;
+    const numericMatch = value.match(/[\d.]+/);
+    if (!numericMatch) {
+      setCount(value);
+      return;
+    }
+    const end = parseFloat(numericMatch[0]);
+    const isFloat = numericMatch[0].includes('.');
+    const suffix = value.replace(numericMatch[0], '');
+    
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const current = progress * end;
+      setCount(isFloat ? current.toFixed(1) + suffix : Math.floor(current) + suffix);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }, [value, duration, trigger]);
+
+  return <span>{count}</span>;
+}
+
 function App() {
   const [skillCategory, setSkillCategory] = useState('tech');
   const [activeExpType, setActiveExpType] = useState('work');
@@ -86,6 +122,7 @@ function App() {
   const [contactStatus, setContactStatus] = useState('');
   const [contactSubmitting, setContactSubmitting] = useState(false);
   const [lightboxImage, setLightboxImage] = useState(null);
+  const [statsRef, statsInView] = useInView({ threshold: 0.1 });
 
   // Stats for the hero counter strip
   const stats = [
@@ -509,12 +546,14 @@ function App() {
             </p>
 
             {/* Stats strip */}
-            <div className="hero-stats">
+            <div className="hero-stats" ref={statsRef}>
               {stats.map((stat, i) => (
                 <div className="hero-stat" key={i}>
                   <span className="hero-stat-icon">{stat.icon}</span>
                   <div>
-                    <span className="hero-stat-value">{stat.value}</span>
+                    <span className="hero-stat-value">
+                      <AnimatedCounter value={stat.value} trigger={statsInView} />
+                    </span>
                     <span className="hero-stat-label">{stat.label}</span>
                   </div>
                 </div>
@@ -898,9 +937,11 @@ function App() {
       {/* ═══════════════════════════════════════ */}
       {/* CONTACT                                */}
       {/* ═══════════════════════════════════════ */}
+      <MemeCorner />
+
       <AnimatedSection id="contact">
         <h2>
-          <span className="highlight">07.</span> Get In Touch
+          <span className="highlight">08.</span> Get In Touch
         </h2>
         <div className="contact-grid">
           <div className="contact-info">
