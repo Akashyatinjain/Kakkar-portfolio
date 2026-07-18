@@ -1040,6 +1040,103 @@ function App() {
         </div>
       </AnimatedSection>
 
+      {/* ═══════════════════════════════════════ */}
+      {/* WRITING & ACTIVITY SECTION              */}
+      {/* ═══════════════════════════════════════ */}
+      <AnimatedSection id="activity">
+        <span className="section-label">WRITING & ACTIVITY</span>
+        <h2 className="section-title">Latest posts</h2>
+
+        <div className="posts-grid">
+          {/* LinkedIn Post Card */}
+          <div className="post-card">
+            <div className="post-card-header">
+              <span className="post-card-platform">
+                <Linkedin size={18} style={{ color: '#0a66c2' }} />
+                LinkedIn
+              </span>
+              <a href="https://linkedin.com/in/drishti-kakkar-13a1992b3" target="_blank" rel="noopener noreferrer" className="post-card-viewall">
+                View all <ArrowUpRight size={14} />
+              </a>
+            </div>
+
+            <div className="linkedin-reposted">
+              <Users size={12} />
+              <span>Drishti posted this</span>
+            </div>
+
+            <div className="linkedin-author-row">
+              <div className="linkedin-avatar">
+                DK
+              </div>
+              <div className="linkedin-author-info">
+                <span className="linkedin-author-name">Drishti Kakkar</span>
+                <span className="linkedin-author-title">Aspiring AI Engineer | IT Undergraduate</span>
+                <span className="linkedin-author-time">3mo • Edited</span>
+              </div>
+            </div>
+
+            <p className="post-content-text">
+              What an incredible journey at the OpenAI Academy x NxtWave Buildathon! Our project qualified for the State-Level Buildathon — the stage only gets bigger from here. 🚀
+            </p>
+
+            <div className="linkedin-metrics">
+              <div className="linkedin-metrics-left">
+                <Star size={12} style={{ color: 'var(--accent-cyan)' }} />
+                <span>53 reactions</span>
+              </div>
+              <span>3 comments</span>
+            </div>
+            
+            <div className="slider-controls">
+              <div className="slider-dots">
+                <span className="slider-dot active"></span>
+                <span className="slider-dot"></span>
+                <span className="slider-dot"></span>
+              </div>
+              <div className="slider-arrows">
+                <span className="slider-arrow">&lt;</span>
+                <span className="slider-arrow">&gt;</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Medium Post Card */}
+          <div className="post-card">
+            <div className="post-card-header">
+              <span className="post-card-platform">
+                <BookOpen size={18} style={{ color: '#ffffff' }} />
+                Medium
+              </span>
+              <a href="https://linkedin.com/in/drishti-kakkar-13a1992b3" target="_blank" rel="noopener noreferrer" className="post-card-viewall">
+                View all <ArrowUpRight size={14} />
+              </a>
+            </div>
+
+            <span className="medium-date">JUN 22, 2025</span>
+            <h3 className="medium-title">
+              My Experience: Exploring Generative AI with the Gemini API in Vertex AI — Skill Badge Earned
+            </h3>
+            
+            <p className="post-content-text">
+              I recently completed the Explore Generative AI with the Gemini API in Vertex AI course as part of Google Cloud\'s #GenAIExchange program hosted by #Hack2Skill. In this blog post, I share insights, prompt engineering details, and tips on using model parameters...
+            </p>
+
+            <a href="https://linkedin.com/in/drishti-kakkar-13a1992b3" target="_blank" rel="noopener noreferrer" className="medium-read-link">
+              Read <ArrowUpRight size={14} />
+            </a>
+
+            <div className="slider-controls">
+              <div className="slider-dots">
+                <span className="slider-dot active"></span>
+                <span className="slider-dot"></span>
+                <span className="slider-dot"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </AnimatedSection>
+
 
       {/* ═══════════════════════════════════════ */}
       {/* CONTACT SECTION                         */}
