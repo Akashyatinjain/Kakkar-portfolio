@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Navbar from './components/Navbar';
 
-// Image asset imports for Vite compilation
+// Image asset imports
 import drishtiImg from './assets/drishti.png';
 import careergpsImg from './assets/careergps_mockup.png';
 import cyberguardImg from './assets/cyberguard_mockup.png';
 import lockerImg from './assets/locker_mockup.png';
 import saregamaImg from './assets/saregama_video.png';
-import newsletterImg from './assets/alumni_newsletter.png';
 import heroImg from './assets/hero.png';
 import reactSvg from './assets/react.svg';
+
 import {
   Github,
   Linkedin,
@@ -20,7 +20,6 @@ import {
   Briefcase,
   Code,
   Brain,
-  Video,
   Users,
   Send,
   Shield,
@@ -29,23 +28,131 @@ import {
   BarChart2,
   Sparkles,
   GraduationCap,
-  Zap,
-  Target,
-  Palette,
-  TrendingUp,
   Star,
   X,
-  Image,
   Loader2,
   CheckCircle,
   Download,
   Calendar,
   AlertCircle,
   ExternalLink,
-  BookOpen
+  BookOpen,
+  ChevronDown,
+  GitFork,
+  ArrowUpRight,
+  Globe,
+  FileText,
 } from 'lucide-react';
 
-/* Intersection Observer hook for scroll-triggered animations */
+/* ═══════════════════════════════════════════════════════════ */
+/* STARFIELD CANVAS COMPONENT                                  */
+/* ═══════════════════════════════════════════════════════════ */
+
+function StarField() {
+  const canvasRef = useRef(null);
+  const starsRef = useRef([]);
+  const animFrameRef = useRef(null);
+
+  const initStars = useCallback((canvas) => {
+    const stars = [];
+    const count = Math.floor((canvas.width * canvas.height) / 3000);
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 1.5 + 0.3,
+        opacity: Math.random() * 0.6 + 0.1,
+        twinkleSpeed: Math.random() * 0.008 + 0.002,
+        twinkleOffset: Math.random() * Math.PI * 2,
+        // Occasional blue-tinted star
+        blue: Math.random() < 0.15,
+      });
+    }
+    // Add a few larger bright stars
+    for (let i = 0; i < 8; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 1.5,
+        opacity: Math.random() * 0.3 + 0.5,
+        twinkleSpeed: Math.random() * 0.01 + 0.005,
+        twinkleOffset: Math.random() * Math.PI * 2,
+        blue: true,
+        glow: true,
+      });
+    }
+    return stars;
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      ctx.scale(dpr, dpr);
+      starsRef.current = initStars({ width: rect.width, height: rect.height });
+    };
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    let time = 0;
+    const animate = () => {
+      time += 1;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      starsRef.current.forEach((star) => {
+        const twinkle = Math.sin(time * star.twinkleSpeed + star.twinkleOffset);
+        const alpha = star.opacity * (0.6 + 0.4 * twinkle);
+
+        if (star.glow) {
+          // Glow for bright stars
+          const gradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.size * 4);
+          gradient.addColorStop(0, `rgba(100, 180, 255, ${alpha * 0.3})`);
+          gradient.addColorStop(1, 'rgba(100, 180, 255, 0)');
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.size * 4, 0, Math.PI * 2);
+          ctx.fillStyle = gradient;
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        if (star.blue) {
+          ctx.fillStyle = `rgba(120, 170, 255, ${alpha})`;
+        } else {
+          ctx.fillStyle = `rgba(200, 210, 230, ${alpha})`;
+        }
+        ctx.fill();
+      });
+
+      animFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    };
+  }, [initStars]);
+
+  return <canvas ref={canvasRef} className="starfield-canvas" />;
+}
+
+
+/* ═══════════════════════════════════════════════════════════ */
+/* INTERSECTION OBSERVER HOOK                                  */
+/* ═══════════════════════════════════════════════════════════ */
+
 function useInView(options) {
   const ref = useRef(null);
   const [isInView, setIsInView] = useState(false);
@@ -63,7 +170,6 @@ function useInView(options) {
   return [ref, isInView];
 }
 
-/* Animated Section wrapper */
 function AnimatedSection({ children, className = '', id, style }) {
   const [ref, isInView] = useInView();
   return (
@@ -78,381 +184,427 @@ function AnimatedSection({ children, className = '', id, style }) {
   );
 }
 
+
+/* ═══════════════════════════════════════════════════════════ */
+/* MAIN APP COMPONENT                                          */
+/* ═══════════════════════════════════════════════════════════ */
+
 function App() {
-  const [skillCategory, setSkillCategory] = useState('tech');
-  const [activeExpType, setActiveExpType] = useState('work');
-  const [selectedExpIdx, setSelectedExpIdx] = useState(0);
-  const [projectCategory, setProjectCategory] = useState('all');
   const [contactStatus, setContactStatus] = useState('');
   const [contactSubmitting, setContactSubmitting] = useState(false);
   const [lightboxImage, setLightboxImage] = useState(null);
 
-  // Stats for the hero counter strip
-  const stats = [
-    { label: 'CGPA Scale', value: '8.6/10', icon: <GraduationCap size={18} /> },
-    { label: 'Production Projects', value: '6 Deployed', icon: <Code size={18} /> },
-    { label: 'Leadership Roles', value: '5+ Active', icon: <Users size={18} /> },
-    { label: 'Verifiable Certs', value: '8+ Issued', icon: <Award size={18} /> }
-  ];
+  // ─── DATA ───
 
-  // "Why Hire Me" value proposition cards — derived from recruiter insights
-  const valueProps = [
-    {
-      icon: <Zap size={28} />,
-      title: 'Cross-functional thinking',
-      subtitle: 'Design, code, and communication',
-      bullets: [
-        'Comfortable moving between product, UI, and implementation',
-        'Builds interfaces that are useful rather than just visually busy',
-        'Knows how to explain ideas clearly to different people'
-      ],
-      tags: ['Product Thinking', 'Frontend', 'Systems', 'Storytelling']
-    },
-    {
-      icon: <Target size={28} />,
-      title: 'Work that actually ships',
-      subtitle: 'Practical, hands-on execution',
-      bullets: [
-        'Has worked across web apps, AI tools, campaigns, and live events',
-        'Prefers solving real problems over chasing novelty',
-        'Can take a rough idea and turn it into something usable'
-      ],
-      tags: ['Execution', 'Ownership', 'Delivery', 'Problem Solving']
-    },
-    {
-      icon: <Brain size={28} />,
-      title: 'Technical depth without the noise',
-      subtitle: 'Useful AI and engineering work',
-      bullets: [
-        'Built AI workflows around LLM APIs and practical integrations',
-        'Experienced with Python, React, and backend services',
-        'Strong interest in tools that feel genuinely helpful'
-      ],
-      tags: ['Python', 'React', 'LLM APIs', 'Automation']
-    },
-    {
-      icon: <Shield size={28} />,
-      title: 'A grounded creative edge',
-      subtitle: 'Design, direction, and clarity',
-      bullets: [
-        'Brings visual thinking into technical work rather than keeping them separate',
-        'Has worked with branding, content, campaigns, and on-set production',
-        'Keeps the details sharp whether the medium is code or a camera'
-      ],
-      tags: ['Branding', 'Content', 'Direction', 'Visual Thinking']
-    }
-  ];
-
-  // Experience Data — structured into Work and Leadership for interactive tabs
-  const experiences = {
-    work: [
-      {
-        title: "Copywriter Intern",
-        company: "EvolvEd",
-        period: "May 2026 - Present",
-        tags: ["Content Writing", "PR", "Marketing", "HTML Emails"],
-        desc: "Creating engaging content for official channels, drafting PR newsletters, LinkedIn updates, and custom HTML email marketing campaigns.",
-        impact: "Authoring weekly PR newsletters reaching 500+ subscribers",
-        achievements: [
-          "Authored weekly PR newsletters and LinkedIn updates driving community engagement.",
-          "Designed custom HTML email campaigns to improve click-rates and subscriber reach."
-        ]
-      },
-      // Zoetics role removed per request
-      {
-        title: "Assistant Director",
-        company: "Final Cut Studio & Production",
-        period: "Sep 2025 - Oct 2025",
-        tags: ["Direction", "Production", "Saregama Music", "Film"],
-        desc: "Served as Assistant Director for a high-profile Saregama music video, managing logistics and directing on-set talent.",
-        impact: "Commercial music video AD credits",
-        achievements: [
-          "Coordinated shoot logistics, script breakdowns, and scene schedules for commercial production.",
-          "Directed on-set talent and managed camera team during multi-location schedules."
-        ]
-      },
-      {
-        title: "Data Science & Analytics Intern",
-        company: "Remarkskill x IIT Hyderabad",
-        period: "Jun 2025 - Jul 2025",
-        tags: ["Python", "Machine Learning", "Data Visualization", "IIT"],
-        desc: "Gained hands-on training with exploratory data analysis, data pre-processing, and building regression models on real-world datasets.",
-        impact: "Built 3 ML models",
-        achievements: [
-          "Developed and deployed 3 regression models on production-grade IIT datasets.",
-          "Conducted detailed exploratory data analysis and data visualization to derive insights."
-        ]
-      },
-      {
-        title: "Actor & Assistant Director Intern",
-        company: "Momomoto Studios",
-        period: "Apr 2024 - Jul 2024",
-        tags: ["Acting", "Scripting", "Direction", "TV Commercial"],
-        desc: "Contributed to script development, scene execution, and worked as an actor on a commercial television project.",
-        impact: "TV commercial acting + AD credits",
-        achievements: [
-          "Contributed to script development and scene blocking during commercial filming.",
-          "Worked on-screen as actor in short-form promotional commercial content."
-        ]
-      }
+  // GitHub stats (hardcoded — update with real values)
+  const githubStats = {
+    username: '@drishti-kakkar',
+    repos: 12,
+    stars: 8,
+    followers: 15,
+    languages: [
+      { name: 'JavaScript', percent: 38, color: 'lang-javascript' },
+      { name: 'Python', percent: 30, color: 'lang-python' },
+      { name: 'HTML', percent: 18, color: 'lang-html' },
+      { name: 'CSS', percent: 10, color: 'lang-css' },
+      { name: 'Java', percent: 4, color: 'lang-java' },
     ],
-    leadership: [
-      {
-        title: "Vice Chairperson",
-        company: "CSI SFIT",
-        period: "Jun 2026 - Present",
-        tags: ["Technical Association", "Management", "Leadership"],
-        desc: "Elected to lead CSI Student Chapter — coordinating tech workshops, hackathons, and overseeing branch administrative activities.",
-        impact: "Leading 50+ member team",
-        achievements: [
-          "Directing CSI Student Chapter operations, managing a core committee of 50+ members.",
-          "Coordinating college-wide technical workshops, speaker sessions, and national hackathons."
-        ]
-      },
-      {
-        title: "NSS Head",
-        company: "NSS SFIT",
-        period: "Jun 2026 - Present",
-        tags: ["Social Welfare", "Leadership", "Event Management"],
-        desc: "Directing college community service projects, blood donation campaigns, tree plantation drives, and organizing welfare events.",
-        impact: "Directing campaigns with 200+ participants",
-        achievements: [
-          "Organized social welfare campaigns and donation camps impacting over 200+ participants.",
-          "Managed budget allocations, public relations, and operational logistics for NSS activities."
-        ]
-      },
-      {
-        title: "Public Relations Executive",
-        company: "Google Developers Group (GDG) SFIT",
-        period: "Jan 2026 - May 2026",
-        tags: ["Public Relations", "Content Writing", "Event PR", "Google"],
-        desc: "Managed promotional copy, scriptwriting, and anchoring for the HackX2.0 national-level hackathon.",
-        impact: "Anchored national event with 300+ devs",
-        achievements: [
-          "Wrote promotional copy and scripts for GDG technical workshops and national hackathons.",
-          "Anchored GDG HackX2.0, presenting to a national audience of 300+ participants."
-        ]
-      },
-      {
-        title: "Joint PR & Social Media Head",
-        company: "SFIT Alumni Association",
-        period: "Jul 2025 - Jun 2026",
-        tags: ["Alumni Engagement", "Social Media", "Webinars", "Newsletters"],
-        desc: "Managed alumni outreach campaigns, conducted interactive alumni webinars on Slido, and designed the monthly newsletter.",
-        impact: "Reaching 1000+ alumni network",
-        achievements: [
-          "Designed and authored monthly digital newsletters sent to a network of 1000+ alumni.",
-          "Hosted interactive webinars using Slido for alumni career guidance sessions."
-        ]
-      }
-    ]
   };
 
-  // Projects Data — with real GitHub repo links
+  // Project/Skills stats card (replacing LeetCode)
+  const projectStats = {
+    total: 6,
+    categories: [
+      { label: 'AI & ML', count: 3, total: 6 },
+      { label: 'Web Apps', count: 2, total: 6 },
+      { label: 'IoT', count: 1, total: 6 },
+    ],
+  };
+
+  // Skills showcase — grouped by the columns in the reference image
+  const skillCategories = [
+    {
+      title: 'Languages',
+      skills: ['Python', 'C', 'C++', 'Java', 'JavaScript', 'TypeScript', 'Advanced SQL'],
+    },
+    {
+      title: 'Web',
+      skills: ['HTML', 'CSS', 'React.js', 'Next.js', 'Node.js', 'Express.js', 'RESTful APIs', 'Tailwind CSS', 'Flask', 'FastAPI'],
+    },
+    {
+      title: 'Data & AI',
+      skills: ['MySQL', 'MongoDB', 'SQLite', 'Vertex AI', 'Gemini API', 'Multimodal RAG', 'Power BI', 'Pandas', 'Plotly', 'AI/ML (basic)', 'DSA'],
+    },
+    {
+      title: 'Tools & Productivity',
+      skills: ['Git', 'GitHub', 'Docker', 'Linux (Ubuntu)', 'Kali Linux', 'VS Code', 'Vercel', 'Render', 'Streamlit', 'Railway', 'Prompt Engineering'],
+    },
+  ];
+
+  // Work experience — 7 roles from CV
+  const workExperience = [
+    {
+      title: 'Copywrite Intern',
+      company: 'EvolvEd',
+      companyType: '— Internship',
+      period: 'May 2026 – Present',
+      current: true,
+      bullets: [
+        'Creating engaging content for the college\'s official social media channels, including PR drafts, LinkedIn posts, and HTML emailers.',
+        'Contributing creative ideas and communication strategies to strengthen the institution\'s digital presence.',
+      ],
+      tags: [
+        { label: 'Content Writing', color: '#3b82f6' },
+        { label: 'PR', color: '#a855f7' },
+        { label: 'Marketing', color: '#10b981' },
+        { label: 'HTML Emails', color: '#f97316' },
+      ],
+    },
+    {
+      title: 'Assistant Director',
+      company: 'Final Cut Studio & Production',
+      companyType: '— Contract',
+      period: 'Sep 2025 – Oct 2025',
+      current: false,
+      bullets: [
+        'Worked as an Assistant Director for a SAREGAMA music video featuring a renowned rapper, managing both creative and production responsibilities.',
+        'Coordinated teams, prepared shoot documents, and ensured smooth on-time execution of scenes.',
+      ],
+      tags: [
+        { label: 'Direction', color: '#ec4899' },
+        { label: 'Saregama', color: '#f97316' },
+        { label: 'Production', color: '#8b5cf6' },
+        { label: 'Film', color: '#3b82f6' },
+      ],
+    },
+    {
+      title: 'Graphic Designer',
+      company: 'Zoetics (B2B, Family Business)',
+      companyType: '— Part-time',
+      period: 'May 2025 – Present',
+      current: true,
+      bullets: [
+        'Designed digital creatives, product catalogs, and marketing visuals tailored for B2B communication.',
+        'Ensuring brand consistency and client engagement. Designed Festival wishes digital templates.',
+      ],
+      tags: [
+        { label: 'Graphic Design', color: '#ec4899' },
+        { label: 'B2B', color: '#3b82f6' },
+        { label: 'Branding', color: '#a855f7' },
+        { label: 'Catalogs', color: '#10b981' },
+      ],
+    },
+    {
+      title: 'Data Science & Analytics Intern',
+      company: 'Remarkskill x IIT Hyderabad',
+      companyType: '— Internship',
+      period: 'Jun 2025 – Jul 2025',
+      current: false,
+      bullets: [
+        'Worked on data preprocessing, exploratory analysis, and visualization to derive insights.',
+        'Applying Python and analytics tools for real-world datasets.',
+      ],
+      tags: [
+        { label: 'Python', color: '#3b82f6' },
+        { label: 'Machine Learning', color: '#a855f7' },
+        { label: 'Data Viz', color: '#10b981' },
+        { label: 'IIT', color: '#eab308' },
+      ],
+    },
+    {
+      title: 'Teaching Assistant',
+      company: 'Arihant Academy',
+      companyType: '— Freelance',
+      period: 'Dec 2025 – Apr 2026',
+      current: false,
+      bullets: [
+        'Assisted students with concepts in English, Mathematics and Science. Conducted doubt-solving sessions, and supported lesson planning. (Covered 8th, 9th and 10th grade students)',
+        'Taught the core concepts, practice sums and previous year papers to 10th students right before their board examinations.',
+      ],
+      tags: [
+        { label: 'Teaching', color: '#10b981' },
+        { label: 'Education', color: '#3b82f6' },
+        { label: 'Math & Science', color: '#a855f7' },
+      ],
+    },
+    {
+      title: 'Exam Invigilator',
+      company: 'Arihant Academy',
+      companyType: '— Part-time',
+      period: 'Aug 2024 – Mar 2025',
+      current: false,
+      bullets: [
+        'Supervised examinations, maintained discipline, and ensured smooth execution of academic protocols.',
+        'Covered 8th, 9th, and 10th grade students during academic assessments.',
+      ],
+      tags: [
+        { label: 'Administration', color: '#eab308' },
+        { label: 'Invigilation', color: '#3b82f6' },
+        { label: 'Student Management', color: '#10b981' },
+      ],
+    },
+    {
+      title: 'Actor & Assistant Director Intern',
+      company: 'Momomoto Studios',
+      companyType: '— Internship',
+      period: 'Apr 2024 – Jul 2024',
+      current: false,
+      bullets: [
+        'Contributed to script discussions, scene execution, and creative direction.',
+        'Performing as an actor in short-form content while also assisting in production.',
+      ],
+      tags: [
+        { label: 'Acting', color: '#ec4899' },
+        { label: 'Direction', color: '#f97316' },
+        { label: 'Scripting', color: '#8b5cf6' },
+      ],
+    },
+  ];
+
+  // Collegiate Activities — 8 roles from CV
+  const leadershipExperience = [
+    {
+      title: 'Vice Chairperson — CSI SFIT',
+      company: 'CSI Student Chapter',
+      companyType: '— Collegiate Activity',
+      period: 'Jun 2026 – Present',
+      current: true,
+      bullets: [
+        'Directing CSI Student Chapter operations, managing a core committee of 50+ members.',
+        'Coordinating college-wide technical workshops, speaker sessions, and national hackathons.',
+      ],
+      tags: [
+        { label: 'Leadership', color: '#3b82f6' },
+        { label: 'Management', color: '#a855f7' },
+        { label: 'Workshops', color: '#10b981' },
+        { label: 'Community', color: '#f97316' },
+      ],
+    },
+    {
+      title: 'Head — NSS SFIT',
+      company: 'NSS Student Chapter',
+      companyType: '— Collegiate Activity',
+      period: 'Jun 2026 – Present',
+      current: true,
+      bullets: [
+        'Leading NSS chapter operations and community service initiatives across Mumbai.',
+        'Organizing social welfare campaigns and donation camps impacting 200+ participants.',
+      ],
+      tags: [
+        { label: 'Social Service', color: '#10b981' },
+        { label: 'Leadership', color: '#3b82f6' },
+        { label: 'Community', color: '#a855f7' },
+      ],
+    },
+    {
+      title: 'PR Executive — Google Developers Group',
+      company: 'GDG SFIT',
+      companyType: '— Collegiate Activity',
+      period: 'Jan 2026 – Jun 2026',
+      current: false,
+      bullets: [
+        'Managed PR and script making for HackX2.0 Hackathon.',
+        'Anchored GDG HackX2.0, presenting to a national audience of 300+ participants.',
+      ],
+      tags: [
+        { label: 'PR', color: '#3b82f6' },
+        { label: 'Google Developer Group', color: '#eab308' },
+        { label: 'Hackathon', color: '#10b981' },
+        { label: 'Anchoring', color: '#f97316' },
+      ],
+    },
+    {
+      title: 'Volunteer — NSS SFIT (Volunteer of the Month July\'25)',
+      company: 'NSS SFIT',
+      companyType: '— Collegiate Activity',
+      period: 'Jul 2025 – Jun 2026',
+      current: false,
+      bullets: [
+        'Designed posters, carousels, directed a short reel, and contributed in clean-ups and tree planting.',
+      ],
+      tags: [
+        { label: 'Design', color: '#ec4899' },
+        { label: 'Social Service', color: '#10b981' },
+        { label: 'Content Creation', color: '#a855f7' },
+      ],
+    },
+    {
+      title: 'Joint PR & SM Head — SFIT Alumni Association',
+      company: 'SFIT Alumni Association',
+      companyType: '— Collegiate Activity',
+      period: 'Jul 2025 – Jun 2026',
+      current: false,
+      bullets: [
+        'Led alumni engagement through PR, events, and social media outreach.',
+        'Managed webinars and quizzes on Slido single-handedly. Currently working on newsletters and Rekindle event.',
+      ],
+      tags: [
+        { label: 'Alumni Engagement', color: '#3b82f6' },
+        { label: 'Social Media', color: '#ec4899' },
+        { label: 'Newsletters', color: '#a855f7' },
+        { label: 'Webinars', color: '#10b981' },
+      ],
+    },
+    {
+      title: 'PR Executive — CSI SFIT',
+      company: 'CSI Student Chapter',
+      companyType: '— Collegiate Activity',
+      period: 'Jul 2025 – Jun 2026',
+      current: false,
+      bullets: [
+        'Handling event management and social media captions, scripting, hosting, and PR activities.',
+      ],
+      tags: [
+        { label: 'PR', color: '#3b82f6' },
+        { label: 'Scripting', color: '#a855f7' },
+        { label: 'Social Media', color: '#ec4899' },
+      ],
+    },
+    {
+      title: 'Marketing Executive — Student Council, SFIT',
+      company: 'SFIT Student Council',
+      companyType: '— Collegiate Activity',
+      period: 'Mar 2025 – Apr 2025',
+      current: false,
+      bullets: [
+        'Coordinated sponsor communication and drafted marketing emails.',
+      ],
+      tags: [
+        { label: 'Marketing', color: '#10b981' },
+        { label: 'Sponsorships', color: '#3b82f6' },
+      ],
+    },
+    {
+      title: 'PR Executive — Student Council, SFIT',
+      company: 'SFIT Student Council',
+      companyType: '— Collegiate Activity',
+      period: 'Mar 2025 – Apr 2025',
+      current: false,
+      bullets: [
+        'Drafted messages, managed registrations desk, and promoted events through social media & public speaking across college.',
+      ],
+      tags: [
+        { label: 'PR', color: '#3b82f6' },
+        { label: 'Public Speaking', color: '#f97316' },
+        { label: 'Social Media', color: '#ec4899' },
+      ],
+    },
+  ];
+
+  // Projects — 9 non-red items from CV
   const projects = [
     {
-      title: "CareerGPS AI",
-      desc: "A career guidance tool that combines resume and profile analysis with practical suggestions, designed to help people think more clearly about their next step.",
-      tech: ["React", "Node.js", "Llama 3.3", "Groq AI", "FastAPI"],
-      category: "ai",
+      title: 'CareerGPS AI',
+      desc: 'Developed and deployed an AI-powered career guidance platform. Integrated resume, GitHub, and LinkedIn analysis, job market trend insights, AI chatbot support, interview assessment, and personalized career recommendations through an automated full-stack system.',
+      tech: ['React', 'Node.js', 'Llama 3.3', 'Groq AI', 'FastAPI'],
+      techColors: ['#61dafb', '#68a063', '#7c3aed', '#f97316', '#009688'],
+      date: 'Jan 2026 – Mar 2026',
       icon: <Brain size={24} />,
-      highlight: "Built around a practical AI workflow",
-      github: "https://github.com/drishti-kakkar/CareerGPS-AI",
-      image: careergpsImg
+      github: 'https://github.com/drishti-kakkar/CareerGPS-AI',
+      image: careergpsImg,
     },
     {
-      title: "CyberGuard AI",
-      desc: "A rapid security analysis tool for identifying suspicious content and AI-generated edits, focused on speed and utility rather than flashy demos.",
-      tech: ["Python", "Computer Vision", "Deep Learning", "Flask"],
-      category: "ai",
+      title: 'CyberGuard AI — Spam Detection',
+      desc: 'Detects spam, message, URL, or upload a screenshot. AI analyzes it in under 2 seconds. Zero data stored. It also has a heatmap and it also detects deepfakes like AI generated images and manipulations.',
+      tech: ['Python', 'Computer Vision', 'Deep Learning', 'Flask'],
+      techColors: ['#3b82f6', '#ef4444', '#a855f7', '#10b981'],
+      date: 'Oct 2025 – Dec 2025',
       icon: <Shield size={24} />,
-      highlight: "Fast, useful detection work",
-      github: "https://github.com/drishti-kakkar/CyberGuard-AI",
-      image: cyberguardImg
+      github: 'https://github.com/drishti-kakkar/CyberGuard-AI',
+      image: cyberguardImg,
     },
-
     {
-      title: "IoT Contactless Smart Locker",
-      desc: "A compact locker system built with hardware and software working together for secure, contactless delivery and access control.",
-      tech: ["Arduino", "Raspberry Pi", "React", "Node.js", "Embedded C"],
-      category: "iot",
+      title: 'Secure Smart Locker (IoT)',
+      desc: 'Designed and developed a space-efficient IoT-enabled smart locker for secure, contactless home deliveries. Integrated microcontroller-based access control with OTP authentication and real-time mobile notifications to ensure package safety. Implemented Wi-Fi connectivity, electronic locking mechanism, and sensor-based parcel detection for automated operation. Focused on enhancing last-mile delivery security and user convenience through smart automation.',
+      tech: ['Arduino', 'Raspberry Pi', 'React', 'Node.js', 'Embedded C'],
+      techColors: ['#00979d', '#c51a4a', '#61dafb', '#68a063', '#f97316'],
+      date: '2025',
       icon: <Lock size={24} />,
-      highlight: "Integrated hardware and software",
-      github: "https://github.com/drishti-kakkar/Smart-Locker-IoT",
-      image: lockerImg
+      github: 'https://github.com/drishti-kakkar/Smart-Locker-IoT',
+      image: lockerImg,
     },
     {
-      title: "AI Chatbot (QR Locator)",
-      desc: "A WhatsApp-based support assistant for hospital navigation, built with real-world utility in mind and shaped by mentorship experience.",
-      tech: ["Python", "WhatsApp API", "SQL", "QR Scanners"],
-      category: "ai",
+      title: 'AI Chatbot (QR Locator)',
+      desc: 'Designed and implemented a WhatsApp chatbot integrated with hospital QR scanners to help users instantly locate affordable generic medicines, access store details, and navigate efficiently using structured backend data systems. [part of that AGASTYA FOUNDATION X JP MORGAN PROJECT]',
+      tech: ['Python', 'WhatsApp API', 'SQL', 'QR Scanners'],
+      techColors: ['#3b82f6', '#25d366', '#f59e0b', '#6b7280'],
+      date: '2025',
       icon: <Cpu size={24} />,
-      highlight: "Focused on accessibility and clarity",
-      github: "https://github.com/drishti-kakkar/AI-Chatbot-QR",
-      image: heroImg
+      github: 'https://github.com/drishti-kakkar/AI-Chatbot-QR',
+      image: heroImg,
     },
     {
-      title: "Netflix Data Platform",
-      desc: "A data-focused interface for exploring catalog patterns and trends with interactive visualizations and a strong emphasis on clarity.",
-      tech: ["React", "D3.js / SVG Charts", "Node.js", "Python"],
-      category: "web",
+      title: 'COVID-19 Analysis',
+      desc: 'Developed a data analysis project to track COVID-19 case trends, recovery rates, and death rates using real-world datasets. The project involved data cleaning, preprocessing, and visualization to present key insights.',
+      tech: ['Python', 'Pandas', 'Matplotlib', 'Data Analysis'],
+      techColors: ['#3b82f6', '#a855f7', '#ef4444', '#10b981'],
+      date: '2024',
       icon: <BarChart2 size={24} />,
-      highlight: "Built for information, not noise",
-      github: "https://github.com/drishti-kakkar/Netflix-Data-Platform",
-      image: reactSvg
-    }
-  ];
-
-  // Skills Data — categorized and mapped from CV content
-  const skills = {
-    Frontend: [
-      'React',
-      'Next.js',
-      'Tailwind CSS',
-      'HTML',
-      'CSS',
-      'JavaScript'
-    ],
-    Backend: [
-      'Python',
-      'Node.js',
-      'FastAPI',
-      'Flask',
-      'Express',
-      'SQL',
-      'Advanced SQL',
-      'Pandas'
-    ],
-    Languages: [
-      'Python',
-      'C',
-      'Java'
-    ],
-    'AI / ML': [
-      'AI / ML (basic)',
-      'Llama 3.3',
-      'Groq',
-      'Prompt Engineering'
-    ],
-    'AI Tools': [
-      'ChatGPT',
-      'Gemini',
-      'Claude',
-      'Perplexity',
-      'Gamma',
-      'Blackbox',
-      'HappyScribe',
-      'Bolt',
-      'Apify',
-      'Goose',
-      'Chroniclehq'
-    ],
-    Data: [
-      'Power BI',
-      'Data Analytics',
-      'Pandas',
-      'Plotly',
-      'DSA'
-    ],
-    DevOps: [
-      'Vercel',
-      'Render',
-      'Streamlit',
-      'Railway',
-      'Deployment',
-      'Automation'
-    ],
-    Creative: [
-      'UI/UX',
-      'Adobe Photoshop',
-      'Canva',
-      'Poster & Carousel Design',
-      'Social Media Design',
-      'Content Marketing',
-      'Copywriting'
-    ],
-    Research: [
-      'Documentation',
-      'Data Interpretation',
-      'Desk Research',
-      'Proposal Drafting'
-    ],
-    'Communication & Leadership': [
-      'Public Speaking',
-      'Presentation Skills',
-      'Time Management',
-      'Team Collaboration',
-      'Multitasking',
-      'Anchoring / Public Speaker'
-    ]
-  };
-
-  // Creative Showcase Data — updated with visual mockups
-  const creativeWorks = [
-    {
-      title: "Saregama Music Video — AD",
-      type: "Film & Direction",
-      desc: "Served as Assistant Director on a Saregama-label music video. Managed shoot logistics, scene breakdowns, talent direction, and multi-location scheduling.",
-      tags: ["Direction", "Saregama", "Production"],
-      image: saregamaImg
-    },
-    // Zoetics creative work removed as requested
-    {
-      title: "SFIT Alumni Newsletter Design",
-      type: "Content & Design",
-      desc: "Designed and authored monthly digital newsletters for 1000+ alumni network. Combined Canva visuals with copywriting for alumni engagement.",
-      tags: ["Newsletter", "Canva", "1000+ Reach"],
-      image: newsletterImg
+      github: 'https://github.com/drishti-kakkar',
     },
     {
-      title: "HackX2.0 National Hackathon — Anchor",
-      type: "Public Speaking",
-      desc: "Anchored the main stage at GDG SFIT's HackX2.0 national-level hackathon. Managed crowd energy, introduced speakers, and facilitated 300+ attendees.",
-      tags: ["Anchoring", "300+ Audience", "GDG"]
+      title: 'Netflix Data Analysis & Platform',
+      desc: 'Developed and deployed a full-stack web application using Netflix dataset insights, featuring movie search, filters, genre analysis, and interactive visualizations.',
+      tech: ['React', 'Node.js', 'Python', 'Data Viz'],
+      techColors: ['#61dafb', '#68a063', '#3b82f6', '#f97316'],
+      date: '2024',
+      icon: <BarChart2 size={24} />,
+      github: 'https://github.com/drishti-kakkar',
     },
     {
-      title: "EvolvEd Email Campaigns",
-      type: "Copywriting & Marketing",
-      desc: "Created HTML email marketing campaigns, PR newsletters, and LinkedIn content for EvolvEd's official channels driving user engagement.",
-      tags: ["HTML Emails", "PR", "Content Marketing"]
+      title: 'Tic-Tac-Toe Game',
+      desc: 'A Python-based Tic-Tac-Toe game that includes an AI opponent and emoji support for a more engaging user experience.',
+      tech: ['Python', 'AI Logic', 'Game Dev'],
+      techColors: ['#3b82f6', '#a855f7', '#6b7280'],
+      date: '2024',
+      icon: <Code size={24} />,
+      github: 'https://github.com/drishti-kakkar',
     },
     {
-      title: "Momomoto Studios — TV Commercial",
-      type: "Acting & Direction",
-      desc: "On-screen actor and assistant director for a television commercial. Contributed to script development, blocking, and scene execution.",
-      tags: ["Acting", "TV Commercial", "Script Dev"]
-    }
+      title: 'Advanced Calculator (Tkinter)',
+      desc: 'A fully functional and standard scientific calculator built with Python and the Tkinter library, demonstrating proficiency in GUI (Graphical User Interface) development.',
+      tech: ['Python', 'Tkinter', 'GUI'],
+      techColors: ['#3b82f6', '#a855f7', '#10b981'],
+      date: '2024',
+      icon: <Cpu size={24} />,
+      github: 'https://github.com/drishti-kakkar',
+    },
+    {
+      title: 'Hand Recognition & Finger Counting',
+      desc: 'A project focused on real-time hand recognition and finger counting using OpenCV and MediaPipe. It utilizes computer vision techniques to detect hand landmarks and a custom algorithm to count the number of extended fingers.',
+      tech: ['Python', 'OpenCV', 'MediaPipe', 'Computer Vision'],
+      techColors: ['#3b82f6', '#10b981', '#f97316', '#ef4444'],
+      date: '2024 – In Progress',
+      icon: <Code size={24} />,
+      github: 'https://github.com/drishti-kakkar',
+    },
   ];
 
   // Certifications
   const certifications = [
-    { name: "Artificial Intelligence and Machine Learning", issuer: "IIT Bombay x Remarkskill", type: "AI / ML", code: "IITB", icon: <Brain size={20} /> },
-    { name: "Data Science and Analytics", issuer: "IIT Hyderabad x Remarkskill", type: "Data Science", code: "IITH", icon: <BarChart2 size={20} /> },
-    { name: "Colloquium '26 Consolation Winner II [Team Lead]", issuer: "St. Francis Institute of Technology", type: "Leadership", code: "SFIT", icon: <Users size={20} /> },
-    { name: "Samadhan Ideathon Top 5 [Team Lead]", issuer: "NSS SFIT", type: "Innovation", code: "NSS", icon: <Target size={20} /> },
-    { name: "Engineering Mentorship Program", issuer: "Agastya Foundation x JP Morgan Chase", type: "Mentorship", code: "JPMC", icon: <GraduationCap size={20} /> }
+    { name: 'Artificial Intelligence and Machine Learning', issuer: 'IIT Bombay x Remarkskill', type: 'AI / ML', code: 'IITB', icon: <Brain size={20} /> },
+    { name: 'Data Science and Analytics', issuer: 'IIT Hyderabad x Remarkskill', type: 'Data Science', code: 'IITH', icon: <BarChart2 size={20} /> },
+    { name: "Colloquium '26 Consolation Winner II [Team Lead]", issuer: 'St. Francis Institute of Technology', type: 'Leadership', code: 'SFIT', icon: <Users size={20} /> },
+    { name: 'Samadhan Ideathon Top 5 [Team Lead]', issuer: 'NSS SFIT', type: 'Innovation', code: 'NSS', icon: <Award size={20} /> },
+    { name: 'Engineering Mentorship Program', issuer: 'Agastya Foundation x JP Morgan Chase', type: 'Mentorship', code: 'JPMC', icon: <GraduationCap size={20} /> },
   ];
 
-  // Web3Forms contact handler — REPLACE the access key with your own from https://web3forms.com
-  const WEB3FORMS_KEY = 'YOUR_ACCESS_KEY_HERE'; // <-- Get your free key at web3forms.com
+  // Contact handler
+  const WEB3FORMS_KEY = 'YOUR_ACCESS_KEY_HERE';
 
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     setContactSubmitting(true);
     setContactStatus('');
-
     const formData = new FormData(e.target);
     formData.append('access_key', WEB3FORMS_KEY);
     formData.append('subject', 'New Contact from Portfolio — Drishti Kakkar');
-    formData.append('from_name', 'Portfolio Contact Form');
-
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        body: formData
+        body: formData,
       });
       const result = await response.json();
-
       if (result.success) {
         setContactStatus('success');
         e.target.reset();
@@ -466,98 +618,262 @@ function App() {
     }
   };
 
-
-
-  const filteredProjects = projects.filter(project =>
-    projectCategory === 'all' || project.category === projectCategory
-  );
-
-  // We'll render the `skills` categories directly below in the UI
+  // ─── RENDER ───
 
   return (
-    <div style={{ backgroundColor: 'var(--color-bg)' }}>
+    <div style={{ backgroundColor: 'var(--bg-primary)' }}>
       <Navbar />
 
-      <header id="home" className="section container" style={{ minHeight: '70vh', display: 'flex', alignItems: 'center' }}>
-        <div className="hero-grid">
-          <div className="hero-content">
-            {/* Profile Avatar */}
-            <div className="hero-avatar-wrapper">
-              <img src={drishtiImg} alt="Drishti Kakkar" className="hero-avatar" />
-            </div>
-            <span className="hero-subtitle" style={{ textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 600 }}>
-              <span style={{ display: 'inline-block', width: '8px', height: '8px', background: '#10B981', borderRadius: '50%', marginRight: '8px', animation: 'blink 1.5s infinite' }}></span>
-              Open to product, design, and engineering work
-            </span>
-            <h1 className="hero-title">
-              I’m <span className="highlight">Drishti</span><br />
-              <span style={{ fontSize: '0.6em', fontWeight: 500, color: 'var(--color-text-secondary)' }}>
-                building digital things that feel <span className="highlight">clear</span>, <span className="highlight">useful</span>, and <span className="highlight">human</span>
-              </span>
-            </h1>
-            <div className="hero-roles">
-              <span>Developer</span>
-              <span className="bullet-sep">•</span>
-              <span>Designer</span>
-              <span className="bullet-sep">•</span>
-              <span>Storyteller</span>
-              <span className="bullet-sep">•</span>
-              <span>Builder</span>
-            </div>
-            <p className="hero-description" style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', maxWidth: '650px', marginTop: '-0.25rem' }}>
-              I work across code, visuals, and communication, and I’m most interested in projects where the experience matters as much as the idea.
-            </p>
+      {/* ═══════════════════════════════════════ */}
+      {/* HERO SECTION                            */}
+      {/* ═══════════════════════════════════════ */}
+      <header id="home" className="hero">
+        <StarField />
 
-            {/* Stats strip */}
-            <div className="hero-stats">
-              {stats.map((stat, i) => (
-                <div className="hero-stat" key={i}>
-                  <span className="hero-stat-icon">{stat.icon}</span>
-                  <div>
-                    <span className="hero-stat-value">{stat.value}</span>
-                    <span className="hero-stat-label">{stat.label}</span>
-                  </div>
+        <div className="container" style={{ position: 'relative', zIndex: 1, width: '100%' }}>
+          <div className="hero-inner">
+            {/* Left: Text content */}
+            <div className="hero-content">
+              <div className="hero-badge">
+                <span className="hero-badge-dot" />
+                Open to internship & full-time opportunities
+              </div>
+
+              <h1 className="hero-heading">
+                Hi, I'm <span className="hero-name">Drishti</span><br />
+                <span className="hero-name">Kakkar</span>
+              </h1>
+
+              <p className="hero-subtitle">Full-Stack Developer</p>
+
+              <p className="hero-description">
+                IT undergraduate who builds full-stack products and AI tooling — from career guidance platforms to IoT smart lockers, shipped under real deadlines.
+              </p>
+
+              <div className="hero-actions">
+                <a href="#projects" className="btn btn-outline">
+                  View Projects
+                </a>
+                <a href="/drishti-cv.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-filled">
+                  <FileText size={14} />
+                  View Résumé
+                </a>
+                <a href="#contact" className="hero-text-link">
+                  Get in touch →
+                </a>
+
+                <div className="hero-socials">
+                  <a href="https://github.com/drishti-kakkar" target="_blank" rel="noopener noreferrer" className="hero-social-icon" aria-label="GitHub">
+                    <Github size={18} />
+                  </a>
+                  <a href="https://linkedin.com/in/drishti-kakkar-13a1992b3" target="_blank" rel="noopener noreferrer" className="hero-social-icon" aria-label="LinkedIn">
+                    <Linkedin size={18} />
+                  </a>
+                  <a href="mailto:drishtikakkar15@gmail.com" className="hero-social-icon" aria-label="Email">
+                    <Mail size={18} />
+                  </a>
                 </div>
-              ))}
+              </div>
             </div>
 
-            <div className="hero-buttons">
-              <a href="#projects" className="btn btn-primary">
-                <Code size={16} /> View Projects
-              </a>
-              <a href="mailto:drishtikakkar15@gmail.com?subject=Resume%20Request" className="btn btn-secondary">
-                <Download size={16} /> Download CV / Resume
-              </a>
+            {/* Right: Hero image */}
+            <div className="hero-image-wrapper">
+              <div className="hero-image-card">
+                <img src={drishtiImg} alt="Drishti Kakkar" />
+              </div>
             </div>
           </div>
+        </div>
 
+        {/* Scroll indicator */}
+        <div className="scroll-indicator">
+          <ChevronDown size={24} />
         </div>
       </header>
 
-      <AnimatedSection id="why-hire">
-        <h2>What I Bring</h2>
-        <p style={{ fontSize: '1.05rem', maxWidth: '700px', marginBottom: '2.5rem', marginTop: '-0.5rem', color: 'var(--color-text-secondary)' }}>
-          I tend to work best where product thinking, visual craft, and execution meet. That’s where the strongest ideas usually end up.
-        </p>
-        <div className="value-props-grid">
-          {valueProps.map((vp, i) => (
-            <div className="value-prop-card" key={i}>
-              <div className="vp-header">
-                <div className="vp-icon">{vp.icon}</div>
-                <div>
-                  <h3 className="vp-title">{vp.title}</h3>
-                  <span className="vp-subtitle">{vp.subtitle}</span>
+
+      {/* ═══════════════════════════════════════ */}
+      {/* EXPERIENCE — Stats & Timeline           */}
+      {/* ═══════════════════════════════════════ */}
+      <AnimatedSection id="experience" className="experience-section">
+        <span className="section-label">EXPERIENCE</span>
+        <h2 className="section-title">Where I've been</h2>
+
+        {/* By the numbers header */}
+        <div className="stats-intro">
+          <Github size={20} className="stats-intro-icon" />
+          <h3>By the numbers</h3>
+          <span className="stats-intro-label">LIVE GITHUB & PROJECT STATS</span>
+        </div>
+
+        {/* Stats cards */}
+        <div className="stats-grid">
+          {/* GitHub Card */}
+          <div className="stat-card">
+            <div className="stat-card-header">
+              <div className="stat-card-title">
+                <Github size={18} />
+                GitHub
+              </div>
+              <span className="stat-card-username">{githubStats.username}</span>
+            </div>
+
+            <div className="github-stats-row">
+              <div className="github-stat-box">
+                <div className="github-stat-icon"><GitFork size={16} /></div>
+                <span className="github-stat-value">{githubStats.repos}</span>
+                <span className="github-stat-label">Repositories</span>
+              </div>
+              <div className="github-stat-box">
+                <div className="github-stat-icon"><Star size={16} /></div>
+                <span className="github-stat-value">{githubStats.stars}</span>
+                <span className="github-stat-label">Stars earned</span>
+              </div>
+              <div className="github-stat-box">
+                <div className="github-stat-icon"><Users size={16} /></div>
+                <span className="github-stat-value">{githubStats.followers}</span>
+                <span className="github-stat-label">Followers</span>
+              </div>
+            </div>
+
+            <div className="language-section-title">MOST USED LANGUAGES</div>
+            {githubStats.languages.map((lang) => (
+              <div className="language-bar-row" key={lang.name}>
+                <span className="language-bar-name">{lang.name}</span>
+                <div className="language-bar-track">
+                  <div
+                    className={`language-bar-fill ${lang.color}`}
+                    style={{ width: `${lang.percent}%` }}
+                  />
                 </div>
               </div>
-              <ul className="vp-bullets" style={{ fontSize: '0.88rem', color: 'var(--color-text-secondary)', paddingLeft: '1.1rem', listStyleType: 'disc', display: 'flex', flexDirection: 'column', gap: '0.4rem', margin: '0.75rem 0 1rem 0', flexGrow: 1 }}>
-                {vp.bullets.map((bullet, idx) => (
-                  <li key={idx} style={{ lineHeight: '1.4' }}>{bullet}</li>
+            ))}
+          </div>
+
+          {/* Project Stats Card */}
+          <div className="stat-card">
+            <div className="stat-card-header">
+              <div className="stat-card-title">
+                <Code size={18} />
+                Project Stats
+              </div>
+              <span className="stat-card-username">#deployed</span>
+            </div>
+
+            <div className="platform-card-body">
+              <div className="platform-stat-ring">
+                <span className="platform-stat-number" style={{ fontSize: '1.5rem' }}>{projectStats.total}</span>
+              </div>
+              <div className="platform-card-stats">
+                {projectStats.categories.map((cat) => (
+                  <div className="platform-difficulty-row" key={cat.label}>
+                    <span className="difficulty-label">{cat.label}</span>
+                    <span className="difficulty-value">{cat.count} / {cat.total}</span>
+                  </div>
                 ))}
-              </ul>
-              <div className="vp-tags">
-                {vp.tags.map((tag, j) => (
-                  <span className="vp-tag" key={j}>{tag}</span>
-                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Skills Showcase (Replicating What I work with layout) */}
+        <div className="platform-section" style={{ marginTop: '2.5rem' }}>
+          <div className="platform-section-header">
+            <div className="platform-section-title">
+              <Sparkles size={18} style={{ color: 'var(--accent-cyan)' }} />
+              <strong>Skills</strong>
+              <span className="platform-section-meta">— What I work with</span>
+            </div>
+          </div>
+          
+          <div className="skills-dashboard-grid">
+            {skillCategories.map((category, idx) => (
+              <div className="skills-dashboard-column" key={idx}>
+                <h3>{category.title}</h3>
+                <div className="skills-dashboard-list">
+                  {category.skills.map((skill, sIdx) => (
+                    <div className="skills-dashboard-item" key={sIdx}>
+                      <div className="skills-dashboard-icon-wrapper">
+                        <Code size={12} />
+                      </div>
+                      <span className="skills-dashboard-name">{skill}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Work Timeline */}
+        <div className="timeline" style={{ marginTop: '2rem' }}>
+          {workExperience.map((exp, idx) => (
+            <div className="timeline-item" key={idx}>
+              <div className="timeline-card">
+                <div className="timeline-card-header">
+                  <div>
+                    <h3>{exp.title} — {exp.company.split(' ')[0].toUpperCase()}</h3>
+                    <div className="timeline-company">
+                      <span className="timeline-company-name">{exp.company}</span>
+                      <span className="timeline-company-type"> {exp.companyType}</span>
+                      {exp.current && <span className="timeline-current-badge" style={{ marginLeft: '0.5rem' }}>CURRENT</span>}
+                    </div>
+                  </div>
+                  <span className="timeline-period">{exp.period}</span>
+                </div>
+
+                <ul className="timeline-bullets">
+                  {exp.bullets.map((bullet, bIdx) => (
+                    <li key={bIdx}>{bullet}</li>
+                  ))}
+                </ul>
+
+                <div className="timeline-tags">
+                  {exp.tags.map((tag, tIdx) => (
+                    <span className="timeline-tag" key={tIdx}>
+                      <span className="timeline-tag-dot" style={{ background: tag.color }} />
+                      {tag.label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Leadership Timeline */}
+        <h3 style={{ marginTop: '2.5rem', marginBottom: '1.5rem', fontSize: '1.25rem' }}>
+          Leadership & Community
+        </h3>
+        <div className="timeline">
+          {leadershipExperience.map((exp, idx) => (
+            <div className="timeline-item" key={idx}>
+              <div className="timeline-card">
+                <div className="timeline-card-header">
+                  <div>
+                    <h3>{exp.title}</h3>
+                    <div className="timeline-company">
+                      <span className="timeline-company-name">{exp.company}</span>
+                      {exp.current && <span className="timeline-current-badge" style={{ marginLeft: '0.5rem' }}>CURRENT</span>}
+                    </div>
+                  </div>
+                  <span className="timeline-period">{exp.period}</span>
+                </div>
+
+                <ul className="timeline-bullets">
+                  {exp.bullets.map((bullet, bIdx) => (
+                    <li key={bIdx}>{bullet}</li>
+                  ))}
+                </ul>
+
+                <div className="timeline-tags">
+                  {exp.tags.map((tag, tIdx) => (
+                    <span className="timeline-tag" key={tIdx}>
+                      <span className="timeline-tag-dot" style={{ background: tag.color }} />
+                      {tag.label}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
@@ -565,364 +881,193 @@ function App() {
       </AnimatedSection>
 
 
-      <AnimatedSection id="about">
-        <h2>About Me</h2>
-        <div className="about-grid">
+      {/* ═══════════════════════════════════════ */}
+      {/* ABOUT SECTION                           */}
+      {/* ═══════════════════════════════════════ */}
+      <AnimatedSection id="about" className="about-section">
+        <span className="section-label">ABOUT</span>
+        <h2 className="section-title">Who I am</h2>
+
+        <div className="about-layout">
+          <img src={drishtiImg} alt="Drishti Kakkar" className="about-photo" />
+
           <div className="about-text">
             <p>
-              I’m an IT undergraduate in Mumbai who spends most of my time building things that are useful, polished, and easy to understand. That usually means web apps, AI features, brand visuals, or content that needs to connect with people.
+              I'm a second-year Information Technology student at St. Francis Institute of Technology, currently
+              holding a CGPA of 8.6. I like building things end-to-end — from the data pipeline to the UI — and I
+              gravitate toward projects where AI tooling solves a real, unglamorous problem.
             </p>
             <p>
-              My work sits somewhere between engineering and communication. I like writing code, but I also care a lot about how something feels, reads, and lands with the people using it.
+              Over the last two years that's meant a career guidance platform powered by Llama 3.3, a CyberGuard
+              deepfake detector, an IoT smart locker system, and a hospital navigation chatbot built during a JP Morgan
+              Chase mentorship. I've also spent time on the other side of the table — <strong>directing a Saregama music
+              video</strong>, leading PR at GDG, and anchoring a national-level hackathon.
             </p>
-            <p style={{ marginBottom: '0.75rem' }}>
-              Outside of the usual academic work, I’ve been involved in design, production, and leadership roles that have made me more comfortable working across teams and formats.
-            </p>
-            <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', paddingLeft: '0.2rem', marginBottom: '1.25rem', listStyle: 'none' }}>
-              <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ color: 'var(--color-accent)' }}>✔</span> <span><strong>Assistant Director</strong> on Saregama productions</span>
-              </li>
-              <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ color: 'var(--color-accent)' }}>✔</span> <span><strong>Copywriter</strong> at EvolvEd</span>
-              </li>
-              <li style={{ fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ color: 'var(--color-accent)' }}>✔</span> <span><strong>Technical Leader</strong> at CSI Student Chapter</span>
-              </li>
-            </ul>
-
-            <div className="education-highlight">
-              <GraduationCap size={24} className="highlight" />
-              <div>
-                <h4>St. Francis Institute of Technology, Mumbai</h4>
-                <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', margin: 0 }}>
-                  B.Tech Information Technology • Aug 2024 – Jun 2028 • <strong className="highlight">CGPA 8.6</strong>
-                </p>
-              </div>
-            </div>
           </div>
-          <div className="about-features">
-            <div className="about-feature-card">
-              <div className="feature-icon-wrapper">
-                <Code size={32} />
-              </div>
-              <h3 style={{ fontSize: '1.1rem' }}>Product-minded development</h3>
-              <p style={{ fontSize: '0.85rem' }}>React, Node.js, FastAPI, and SQL work that is built to be useful rather than just impressive on paper.</p>
+        </div>
+
+        <div className="about-info-cards">
+          <div className="about-info-card">
+            <div className="about-info-icon">
+              <GraduationCap size={22} />
             </div>
-            <div className="about-feature-card">
-              <div className="feature-icon-wrapper">
-                <Video size={32} />
-              </div>
-              <h3 style={{ fontSize: '1.1rem' }}>Visual and narrative work</h3>
-              <p style={{ fontSize: '0.85rem' }}>Branding, campaigns, social content, and production work that all come from the same design sense.</p>
+            <h4>B.E. Information Technology, St. Francis Institute of Technology (2024–2028)</h4>
+            <p>CGPA: 8.6</p>
+          </div>
+          <div className="about-info-card">
+            <div className="about-info-icon">
+              <MapPin size={22} />
             </div>
-            <div className="about-feature-card">
-              <div className="feature-icon-wrapper">
-                <Brain size={32} />
-              </div>
-              <h3 style={{ fontSize: '1.1rem' }}>Practical AI usage</h3>
-              <p style={{ fontSize: '0.85rem' }}>LLM integrations and automation that are built around actual problems, not novelty for its own sake.</p>
+            <h4>Mumbai, India</h4>
+            <p>Based in</p>
+          </div>
+          <div className="about-info-card">
+            <div className="about-info-icon">
+              <Globe size={22} />
             </div>
-            <div className="about-feature-card">
-              <div className="feature-icon-wrapper">
-                <Users size={32} />
-              </div>
-              <h3 style={{ fontSize: '1.1rem' }}>Leadership with calm</h3>
-              <p style={{ fontSize: '0.85rem' }}>Experience coordinating people and events without losing sight of the quality of the work itself.</p>
-            </div>
+            <h4>English, Hindi, Marathi</h4>
+            <p>Languages</p>
           </div>
         </div>
       </AnimatedSection>
 
-      {/* ═══════════════════════════════════════ */}
-      {/* SKILLS MATRIX                          */}
-      {/* ═══════════════════════════════════════ */}
-      {/* Simplified skills section: Frontend / Backend lists */}
-      {
-        /* Define simple skill lists placed above return */
-      }
-
-      <AnimatedSection id="skills">
-        <h2>
-          <span className="highlight">02.</span> Skills
-        </h2>
-        <p style={{ color: 'var(--color-text-secondary)', maxWidth: '700px', marginTop: '-0.5rem' }}>
-          A concise view of core frontend and backend skills.
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginTop: '1.25rem' }}>
-          {Object.entries(skills).map(([cat, items]) => (
-            <div key={cat}>
-              <h3 style={{ marginBottom: '0.6rem' }}>{cat}</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
-                {items.map(s => (
-                  <span key={s} className="skill-badge proficient" style={{ display: 'inline-flex', alignItems: 'center' }}>{s}</span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </AnimatedSection>
-
-      {/* ═══════════════════════════════════════ */}
-      {/* EXPERIENCE & LEADERSHIP                */}
-      {/* ═══════════════════════════════════════ */}
-      <AnimatedSection id="experience">
-        <h2>
-          <span className="highlight">03.</span> Experience & Leadership
-        </h2>
-
-        {/* Tab Selector buttons */}
-        <div className="exp-selector-tabs">
-          <button
-            onClick={() => { setActiveExpType('work'); setSelectedExpIdx(0); }}
-            className={`exp-type-btn ${activeExpType === 'work' ? 'active' : ''}`}
-          >
-            <Briefcase size={18} />
-            <span>Professional Experience</span>
-          </button>
-          <button
-            onClick={() => { setActiveExpType('leadership'); setSelectedExpIdx(0); }}
-            className={`exp-type-btn ${activeExpType === 'leadership' ? 'active' : ''}`}
-          >
-            <Users size={18} />
-            <span>Leadership & Community</span>
-          </button>
-        </div>
-
-        {/* Dashboard layout */}
-        <div className="exp-dashboard">
-          {/* Left company names pane */}
-          <div className="exp-left-pane">
-            {experiences[activeExpType].map((exp, idx) => (
-              <button
-                key={idx}
-                onClick={() => setSelectedExpIdx(idx)}
-                className={`exp-company-tab ${selectedExpIdx === idx ? 'active' : ''}`}
-              >
-                {exp.company}
-              </button>
-            ))}
-          </div>
-
-          {/* Right details pane */}
-          <div className="exp-right-pane">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 700 }}>
-                  {experiences[activeExpType][selectedExpIdx].title}
-                </h3>
-                <div style={{ color: 'var(--color-accent)', fontWeight: 600, marginTop: '0.25rem', fontFamily: 'var(--font-mono)' }}>
-                  @ {experiences[activeExpType][selectedExpIdx].company}
-                </div>
-              </div>
-              <span className="timeline-period" style={{ marginTop: '0.25rem' }}>
-                {experiences[activeExpType][selectedExpIdx].period}
-              </span>
-            </div>
-
-            <p style={{ fontSize: '1rem', lineHeight: '1.6', margin: '0.5rem 0 0.25rem 0' }}>
-              {experiences[activeExpType][selectedExpIdx].desc}
-            </p>
-
-            {experiences[activeExpType][selectedExpIdx].achievements && (
-              <ul className="exp-achievements">
-                {experiences[activeExpType][selectedExpIdx].achievements.map((ach, aIdx) => (
-                  <li key={aIdx}>{ach}</li>
-                ))}
-              </ul>
-            )}
-
-            {experiences[activeExpType][selectedExpIdx].impact && (
-              <div className="timeline-impact" style={{ marginTop: '0.75rem' }}>
-                <TrendingUp size={15} />
-                <span>{experiences[activeExpType][selectedExpIdx].impact}</span>
-              </div>
-            )}
-
-            <div className="timeline-tags" style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
-              {experiences[activeExpType][selectedExpIdx].tags.map((tag, tIdx) => (
-                <span key={tIdx} className="timeline-tag">{tag}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </AnimatedSection>
-
-      {/* ═══════════════════════════════════════ */}
-      {/* SELECTED PROJECTS                      */}
-      {/* ═══════════════════════════════════════ */}
       <AnimatedSection id="projects">
-        <h2>
-          <span className="highlight">04.</span> Selected Projects
-        </h2>
+        <span className="section-label">PROJECTS</span>
+        <h2 className="section-title">Things I've built</h2>
+        <p className="projects-subtitle" style={{ marginBottom: '1.5rem' }}>Auto-scrolling — click a card to open full details.</p>
 
-        <div className="filters-container">
-          <div className="filter-group">
-            {['all', 'ai', 'iot', 'web'].map(cat => (
-              <button
-                key={cat}
-                onClick={() => setProjectCategory(cat)}
-                className={`filter-btn ${projectCategory === cat ? 'active' : ''}`}
+        <div className="projects-marquee-wrapper">
+          <div className="projects-marquee-track">
+            {[...projects, ...projects].map((project, index) => (
+              <article
+                className="project-marquee-card"
+                key={index}
+                onClick={() => window.open(project.github, '_blank')}
+                style={{ display: 'flex', flexDirection: 'column' }}
               >
-                {cat === 'all' ? 'All Projects' : cat === 'ai' ? 'AI & Data Science' : cat === 'iot' ? 'IoT & Hardware' : 'Web Platforms'}
-              </button>
+                {/* Arrow icon */}
+                <div className="project-card-arrow" style={{ opacity: 1 }}>
+                  <ArrowUpRight size={14} />
+                </div>
+
+                {/* Image */}
+                <div
+                  className={`project-media ${project.image ? 'has-image' : ''}`}
+                  style={project.image ? { backgroundImage: `url(${project.image})`, height: '160px' } : { height: '160px' }}
+                >
+                  {!project.image && (
+                    <div className="project-image-icon">{project.icon}</div>
+                  )}
+                </div>
+
+                {/* Body */}
+                <div className="project-body" style={{ padding: '1rem', flex: 1 }}>
+                  <span className="project-date">{project.date}</span>
+                  <h3 className="project-title" style={{ fontSize: '0.95rem' }}>{project.title}</h3>
+                  <p className="project-description" style={{ fontSize: '0.78rem', marginBottom: '0.5rem', WebkitLineClamp: 3 }}>
+                    {project.desc}
+                  </p>
+
+                  {/* Tech dots */}
+                  <div className="project-tech-dots" style={{ marginBottom: '0.5rem' }}>
+                    {project.tech.map((t, tIdx) => (
+                      <span
+                        key={tIdx}
+                        className="tech-dot"
+                        title={t}
+                        style={{
+                          background: project.techColors?.[tIdx] || 'var(--accent-cyan)',
+                          width: '18px',
+                          height: '18px',
+                          fontSize: '0.5rem'
+                        }}
+                      >
+                        {t.charAt(0)}
+                      </span>
+                    ))}
+                  </div>
+
+                  <span className="project-details-link" style={{ fontSize: '0.68rem' }}>CLICK FOR DETAILS</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </AnimatedSection>
+
+      <AnimatedSection id="certifications">
+        <span className="section-label" style={{ textAlign: 'center', display: 'block' }}>CERTIFICATIONS & AWARDS</span>
+        <h2 className="section-title trophy-section-title">Trophy Room</h2>
+        <p className="trophy-subtitle">Achievements and certifications unlocked — hover to pause, click to enlarge.</p>
+
+        {/* Row 1 */}
+        <div className="trophy-marquee-wrapper">
+          <div className="trophy-marquee-track">
+            {/* Duplicate items for seamless loop */}
+            {[...certifications, ...certifications].map((cert, index) => (
+              <div className="trophy-card" key={`row1-${index}`}>
+                <div className="trophy-card-image">
+                  <div className="trophy-card-placeholder">
+                    <span className="trophy-card-placeholder-icon">{cert.icon}</span>
+                    <span className="trophy-card-placeholder-code">{cert.code}</span>
+                    <span className="trophy-card-placeholder-type">{cert.type}</span>
+                  </div>
+                </div>
+                <div className="trophy-card-title">{cert.name} — {cert.issuer}</div>
+              </div>
             ))}
           </div>
         </div>
 
-        <div className="projects-grid">
-          {filteredProjects.map((project, index) => (
-            <article className="project-card" key={index}>
-              <div className={`project-media ${project.image ? 'has-image' : ''}`} style={project.image ? { backgroundImage: `url(${project.image})` } : {}}>
-                {!project.image && (
-                  <div className="project-image-icon">
-                    {project.icon}
-                  </div>
-                )}
-              </div>
-              <div className="project-body">
-                <h3 className="project-title">{project.title}</h3>
-                {project.highlight && (
-                  <div className="project-highlight">
-                    <Star size={12} />
-                    <span>{project.highlight}</span>
-                  </div>
-                )}
-                <p className="project-description">{project.desc}</p>
-                <div className="project-tags" style={{ marginBottom: '0.5rem' }}>
-                  {project.tech.map((tech, tIdx) => (
-                    <span key={tIdx} className="project-tag">{tech}</span>
-                  ))}
-                </div>
+        <div className="trophy-row-spacer" />
 
-                {/* Project Links footer */}
-                <div className="project-links" style={{ display: 'flex', gap: '0.4rem', marginTop: 'auto', paddingTop: '0.75rem', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="project-link-btn primary" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', fontSize: '0.72rem', fontFamily: 'var(--font-mono)', padding: '0.35rem 0.55rem', borderRadius: '4px', background: 'rgba(59, 130, 246, 0.08)', border: '1px solid rgba(59, 130, 246, 0.25)', color: 'var(--color-accent)', transition: 'var(--transition-fast)', cursor: 'pointer' }}>
-                    <Github size={13} /> GitHub
-                  </a>
-                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="project-link-btn" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', fontSize: '0.72rem', fontFamily: 'var(--font-mono)', padding: '0.35rem 0.55rem', borderRadius: '4px', background: 'transparent', border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)', transition: 'var(--transition-fast)', cursor: 'pointer' }}>
-                    <ExternalLink size={13} /> Live
-                  </a>
-                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="project-link-btn" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', fontSize: '0.72rem', fontFamily: 'var(--font-mono)', padding: '0.35rem 0.55rem', borderRadius: '4px', background: 'transparent', border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)', transition: 'var(--transition-fast)', cursor: 'pointer' }}>
-                    <BookOpen size={13} /> Case Study
-                  </a>
+        {/* Row 2 — reverse direction */}
+        <div className="trophy-marquee-wrapper">
+          <div className="trophy-marquee-track reverse">
+            {[...certifications, ...certifications].reverse().map((cert, index) => (
+              <div className="trophy-card" key={`row2-${index}`}>
+                <div className="trophy-card-image">
+                  <div className="trophy-card-placeholder">
+                    <span className="trophy-card-placeholder-icon">{cert.icon}</span>
+                    <span className="trophy-card-placeholder-code">{cert.code}</span>
+                    <span className="trophy-card-placeholder-type">{cert.type}</span>
+                  </div>
                 </div>
+                <div className="trophy-card-title">{cert.name} — {cert.issuer}</div>
               </div>
-            </article>
-          ))}
+            ))}
+          </div>
         </div>
       </AnimatedSection>
 
-      {/* ═══════════════════════════════════════ */}
-      {/* CREATIVE SHOWCASE                      */}
-      {/* ═══════════════════════════════════════ */}
-      <AnimatedSection id="creative">
-        <h2>
-          <span className="highlight">05.</span> Creative Work
-        </h2>
-        <p style={{ fontSize: '1.05rem', maxWidth: '700px', marginBottom: '2rem', marginTop: '-0.5rem' }}>
-          A few pieces from the design and production side of my work, where the visual quality matters just as much as the idea.
-        </p>
-        <div className="creative-grid">
-          {creativeWorks.map((work, index) => (
-            <div
-              className="creative-card"
-              key={index}
-              style={{ cursor: work.image ? 'pointer' : 'default' }}
-              onClick={() => work.image && setLightboxImage(work)}
-            >
-              {work.image ? (
-                <div className="creative-card-visual has-image">
-                  <img src={work.image} alt={work.title} className="creative-card-image" />
-                  <div className="creative-card-type-badge">{work.type}</div>
-                  <div className="project-image-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span className="btn btn-secondary btn-sm" style={{ pointerEvents: 'none' }}>
-                      <Sparkles size={16} /> View Showcase
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <div className="creative-card-visual">
-                  <div className="creative-card-type-badge">{work.type}</div>
-                  <Palette size={32} className="creative-card-icon" />
-                </div>
-              )}
-              <div className="creative-card-body">
-                <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  {work.title}
-                  {work.image && <Sparkles size={14} className="highlight" style={{ animation: 'blink 2s infinite' }} />}
-                </h3>
-                <p>{work.desc}</p>
-                <div className="creative-card-tags">
-                  {work.tags.map((tag, j) => (
-                    <span key={j} className="creative-tag">{tag}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div style={{ marginTop: '2rem', padding: '1.25rem', border: '1px dashed var(--color-border)', borderRadius: '8px', textAlign: 'center' }}>
-          <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', margin: 0 }}>
-            <Image size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '6px' }} />
-            There’s more where this came from — design work, campaign materials, and production references are available on request.
-          </p>
-        </div>
-      </AnimatedSection>
 
       {/* ═══════════════════════════════════════ */}
-      {/* CERTIFICATIONS & ACHIEVEMENTS          */}
-      {/* ═══════════════════════════════════════ */}
-      <AnimatedSection id="certifications">
-        <h2>
-          <span className="highlight">06.</span> Certifications & Achievements
-        </h2>
-        <div className="certifications-list">
-          {certifications.map((cert, index) => (
-            <div className="cert-card" key={index}>
-              <div className="cert-badge-logo">{cert.code}</div>
-              <div className="cert-icon-wrapper">{cert.icon}</div>
-              <div className="cert-info">
-                <span className="cert-name">{cert.name}</span>
-                <span className="cert-issuer">{cert.issuer}</span>
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.35rem', flexWrap: 'wrap' }}>
-                  <span className="cert-pill">{cert.type}</span>
-                  <span className="cert-verified-pill">✓ Verified</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </AnimatedSection>
-
-      {/* ═══════════════════════════════════════ */}
-      {/* CONTACT                                */}
+      {/* CONTACT SECTION                         */}
       {/* ═══════════════════════════════════════ */}
       <AnimatedSection id="contact">
-        <h2>
-          <span className="highlight">07.</span> Get In Touch
-        </h2>
+        <span className="section-label">CONTACT</span>
+        <h2 className="section-title">Get in touch</h2>
+
         <div className="contact-grid">
           <div className="contact-info">
-            <h3 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>Let’s talk</h3>
-            <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', lineHeight: '1.5', marginBottom: '1.5rem' }}>
-              I’m open to internships, freelance work, and collaborations where strong execution matters as much as the idea itself.
+            <h3>Let's talk</h3>
+            <p style={{ fontSize: '0.95rem', marginBottom: '1.5rem' }}>
+              I'm open to internships, freelance work, and collaborations where strong execution matters as much as the idea itself.
             </p>
 
             <div className="contact-methods-grid">
               <div className="contact-method-card">
-                <MapPin size={20} style={{ color: 'var(--color-accent)' }} />
+                <MapPin size={20} style={{ color: 'var(--accent-cyan)', flexShrink: 0 }} />
                 <div>
                   <h4>Location</h4>
                   <p>Mumbai, Maharashtra, India</p>
                 </div>
               </div>
-
               <div className="contact-method-card">
-                <Calendar size={20} style={{ color: 'var(--color-accent)' }} />
+                <Calendar size={20} style={{ color: 'var(--accent-cyan)', flexShrink: 0 }} />
                 <div>
                   <h4>Availability</h4>
-                  <p>Usually available for short-term work, internships, and focused projects</p>
+                  <p>Open for internships and projects</p>
                 </div>
               </div>
             </div>
@@ -935,10 +1080,10 @@ function App() {
                 <Github size={18} /> GitHub
               </a>
               <a href="mailto:drishtikakkar15@gmail.com" className="contact-link-item">
-                <Mail size={18} /> Email: drishtikakkar15@gmail.com
+                <Mail size={18} /> drishtikakkar15@gmail.com
               </a>
               <a href="tel:+918355844274" className="contact-link-item">
-                <Phone size={18} /> Call: +91 83558 44274
+                <Phone size={18} /> +91 83558 44274
               </a>
               <a href="mailto:drishtikakkar15@gmail.com?subject=Resume%20Request" className="contact-link-item resume-btn">
                 <Download size={18} /> Request Resume / CV
@@ -948,7 +1093,6 @@ function App() {
 
           <form className="contact-form" onSubmit={handleContactSubmit}>
             <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
-            <input type="hidden" name="subject" value="New Contact from Portfolio — Drishti Kakkar" />
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input type="text" id="name" name="name" required className="form-control" placeholder="Enter your name" />
@@ -959,9 +1103,9 @@ function App() {
             </div>
             <div className="form-group">
               <label htmlFor="message">Message</label>
-              <textarea id="message" name="message" required className="form-control" placeholder="Your message here..."></textarea>
+              <textarea id="message" name="message" required className="form-control" placeholder="Your message here..." />
             </div>
-            <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }} disabled={contactSubmitting}>
+            <button type="submit" className="btn btn-filled" style={{ alignSelf: 'flex-start' }} disabled={contactSubmitting}>
               {contactSubmitting ? (
                 <><Loader2 size={16} className="spin-icon" /> Sending...</>
               ) : (
@@ -971,33 +1115,34 @@ function App() {
             {contactStatus === 'success' && (
               <div className="contact-feedback success">
                 <CheckCircle size={16} />
-                <span>Message sent successfully. I’ll get back to you as soon as I can.</span>
+                <span>Message sent successfully. I'll get back to you soon.</span>
               </div>
             )}
             {contactStatus === 'error' && (
               <div className="contact-feedback error">
                 <AlertCircle size={16} />
-                <span>Something went wrong. You can also email me directly at drishtikakkar15@gmail.com.</span>
+                <span>Something went wrong. Email me directly at drishtikakkar15@gmail.com.</span>
               </div>
             )}
           </form>
         </div>
       </AnimatedSection>
 
+
       {/* ═══════════════════════════════════════ */}
-      {/* FOOTER                                 */}
+      {/* FOOTER                                  */}
       {/* ═══════════════════════════════════════ */}
       <footer className="footer">
         <div className="footer-container">
           <div className="social-links">
             <a href="https://github.com/drishti-kakkar" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GitHub">
-              <Github size={22} />
+              <Github size={20} />
             </a>
             <a href="https://linkedin.com/in/drishti-kakkar-13a1992b3" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">
-              <Linkedin size={22} />
+              <Linkedin size={20} />
             </a>
             <a href="mailto:drishtikakkar15@gmail.com" className="social-link" aria-label="Email">
-              <Mail size={22} />
+              <Mail size={20} />
             </a>
           </div>
           <p className="footer-text">
@@ -1015,16 +1160,11 @@ function App() {
             </button>
             <img src={lightboxImage.image} alt={lightboxImage.title} className="lightbox-img" />
             <div className="lightbox-details">
-              <span className="lightbox-badge">{lightboxImage.type}</span>
+              <span className="lightbox-badge">{lightboxImage.type || 'Preview'}</span>
               <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginTop: '0.5rem' }}>{lightboxImage.title}</h3>
-              <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
                 {lightboxImage.desc}
               </p>
-              <div className="creative-card-tags" style={{ marginTop: '0.5rem' }}>
-                {lightboxImage.tags.map((tag, j) => (
-                  <span key={j} className="creative-tag">{tag}</span>
-                ))}
-              </div>
             </div>
           </div>
         </div>
